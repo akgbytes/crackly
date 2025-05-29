@@ -18,6 +18,7 @@ import {
 } from "../utils/helpers";
 import { ApiResponse } from "../utils/ApiResponse";
 import { accessTokenOptions, refreshTokenOptions } from "../configs/cookies";
+import { uploadOnCloudinary } from "./cloudinary";
 
 export const register = asyncHandler(async (req, res) => {
   const { email, password, name } = handleZodError(validateRegister(req.body));
@@ -168,4 +169,36 @@ export const getProfile = asyncHandler(async (req, res) => {
         user
       )
     );
+});
+
+export const uploadAvatar = asyncHandler(async (req, res) => {
+  const { email } = req.user;
+
+  let avatarUrl;
+  if (req.file) {
+    try {
+      const uploaded = await uploadOnCloudinary(req.file.path);
+      avatarUrl = uploaded?.secure_url;
+
+      await db
+        .update(users)
+        .set({ avatar: avatarUrl })
+        .where(eq(users.email, email));
+
+      logger.info("Avatar uploaded successfully", { email, avatarUrl });
+      res
+        .status(ResponseStatus.Success)
+        .json(
+          new ApiResponse(
+            ResponseStatus.Success,
+            "Avatar uploaded successfully",
+            { avatarUrl }
+          )
+        );
+    } catch (err: any) {
+      logger.warn(`Avatar upload failed for ${email} due to ${err.message}`);
+    }
+  } else {
+    throw new CustomError(ResponseStatus.BadRequest, "No image uploaded");
+  }
 });
