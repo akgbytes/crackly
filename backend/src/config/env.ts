@@ -44,7 +44,7 @@ const envSchema = z.object({
   CLIENT_URL: validURL("CLIENT_URL"),
 
   NODE_ENV: z.nativeEnum(NodeEnv, {
-    errorMap: (issue, ctx) => {
+    errorMap: () => {
       return { message: "NODE_ENV must be 'development' or 'production" };
     },
   }),

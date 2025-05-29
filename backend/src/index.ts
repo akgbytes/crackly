@@ -1,15 +1,11 @@
-import express from "express";
-import { logger } from "./config/logger";
+import app from "./app";
 import { env } from "./config/env";
+import { logger } from "./config/logger";
+import { connectDrizzle } from "./db";
 
-const app = express();
 const PORT = env.PORT;
 
-import healthRoute from "./routes/healthCheck.routes";
-import { errorHandler } from "./middlewares/error.middlewares";
-
-app.use("/api/v1/healthCheck", healthRoute);
-app.use(errorHandler);
+connectDrizzle();
 
 app.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
