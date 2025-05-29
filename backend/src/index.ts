@@ -1,6 +1,6 @@
 import app from "./app";
-import { env } from "./config/env";
-import { logger } from "./config/logger";
+import { env } from "./configs/env";
+import { logger } from "./configs/logger";
 import { connectDrizzle } from "./db";
 
 const PORT = env.PORT;

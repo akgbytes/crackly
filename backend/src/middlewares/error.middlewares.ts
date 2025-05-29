@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { CustomError } from "../utils/customError";
+import { CustomError } from "../utils/CustomError";
 import { ResponseStatus } from "../utils/constants";
-import { logger } from "../config/logger";
+import { logger } from "../configs/logger";
 
 export const errorHandler = (
   error: any,
@@ -9,7 +9,7 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ): void => {
-  let customError: CustomError;
+  let customError;
 
   if (error instanceof CustomError) {
     customError = error;
@@ -20,7 +20,12 @@ export const errorHandler = (
     );
   }
 
-  logger.error(customError.message);
+  logger.error(customError.message, {
+    path: req.path,
+    method: req.method,
+    ip: req.ip,
+    stack: customError.stack || "",
+  });
 
   res.status(customError.code).json({
     code: customError.code,

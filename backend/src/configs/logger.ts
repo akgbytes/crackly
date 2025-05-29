@@ -29,7 +29,6 @@ const consoleFormat = format.printf(
 
 const baseFormat = format.combine(
   format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-  format.errors({ stack: true }),
   format.splat(),
   format.metadata({ fillExcept: ["timestamp", "level", "message", "stack"] })
 );
