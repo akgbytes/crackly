@@ -1,13 +1,16 @@
 import express from "express";
+import { logger } from "./config/logger";
+import { env } from "./config/env";
 
 const app = express();
+const PORT = env.PORT;
 
-const PORT = 8080;
+import healthRoute from "./routes/healthCheck.routes";
+import { errorHandler } from "./middlewares/error.middlewares";
 
-app.get("/", (req, res) => {
-  res.send("Hello there!");
-});
+app.use("/api/v1/healthCheck", healthRoute);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  logger.info(`Server running on port ${PORT}`);
 });
