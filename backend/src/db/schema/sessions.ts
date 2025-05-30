@@ -8,5 +8,6 @@ export const sessions = pgTable("sessions", {
   role: text("role").notNull(),
   experience: text("experience").notNull(),
   importantTopics: text("important_topics").notNull(),
+  description: text("description"),
   ...timestamps,
 });

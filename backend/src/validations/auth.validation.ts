@@ -40,18 +40,12 @@ type LoginData = z.infer<typeof loginSchema>;
 type EmailData = z.infer<typeof emailSchema>;
 type PasswordData = z.infer<typeof passwordSchema>;
 
-export const validateRegister = (data: RegisterData) => {
-  return registerSchema.safeParse(data);
-};
+export const validateRegister = (data: RegisterData) =>
+  registerSchema.safeParse(data);
 
-export const validateLogin = (data: LoginData) => {
-  return loginSchema.safeParse(data);
-};
+export const validateLogin = (data: LoginData) => loginSchema.safeParse(data);
 
-export const validateEmail = (data: EmailData) => {
-  return emailSchema.safeParse(data);
-};
+export const validateEmail = (data: EmailData) => emailSchema.safeParse(data);
 
-export const validatePassword = (data: PasswordData) => {
-  return passwordSchema.safeParse(data);
-};
+export const validatePassword = (data: PasswordData) =>
+  passwordSchema.safeParse(data);

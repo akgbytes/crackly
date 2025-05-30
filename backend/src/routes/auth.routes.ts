@@ -14,7 +14,7 @@ const router = Router();
 router.post("/register", register);
 router.post("/login", login);
 router.post("/logout", isLoggedIn, logout);
-router.get("/profile", isLoggedIn, getProfile);
+router.get("/me", isLoggedIn, getProfile);
 router.post(
   "/upload-avatar",
   isLoggedIn,
