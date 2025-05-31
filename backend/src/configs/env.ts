@@ -47,6 +47,8 @@ const envSchema = z.object({
   SERVER_URL: validURL("SERVER_URL"),
   CLIENT_URL: validURL("CLIENT_URL"),
 
+  GEMINI_API_KEY: nonEmptyString("GEMINI_API_KEY"),
+
   NODE_ENV: z.nativeEnum(NodeEnv, {
     errorMap: () => {
       return { message: "NODE_ENV must be 'development' or 'production" };

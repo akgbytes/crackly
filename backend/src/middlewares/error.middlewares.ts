@@ -9,6 +9,7 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ): void => {
+  console.log("midd", error);
   let customError;
 
   if (error instanceof CustomError) {
