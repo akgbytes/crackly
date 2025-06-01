@@ -117,15 +117,25 @@ export const logout = asyncHandler(async (req, res) => {
   const { id, email } = req.user;
 
   if (!refreshToken) {
-    throw new CustomError(ResponseStatus.BadRequest, "Refresh token missing");
+    throw new CustomError(
+      ResponseStatus.BadRequest,
+      "Authentication token not found. Please log in again."
+    );
   }
 
   const hashedToken = createHash(refreshToken);
 
-  await db
+  const result = await db
     .update(users)
     .set({ refreshToken: null })
     .where(eq(users.refreshToken, hashedToken));
+
+  if (!result.rowCount) {
+    throw new CustomError(
+      ResponseStatus.BadRequest,
+      "Invalid or expired session. Please log in again."
+    );
+  }
 
   logger.info("User logged out", { email, userId: id, ip: req.ip });
 

@@ -1,8 +1,10 @@
-import { Button, buttonVariants } from "./ui/button";
+import { useAppContext } from "../hooks/useAppContext";
+import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
 
 export const Navbar = () => {
   const user = false;
+  const { navigate } = useAppContext();
   return (
     <nav className="sticky z-[100] h-16 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/80 backdrop-blur-lg transition-all">
       <div className="flex h-16 items-center justify-between mx-auto w-full max-w-screen-xl px-2.5 md:px-20">
@@ -13,48 +15,51 @@ export const Navbar = () => {
         <div className="h-full flex items-center space-x-4">
           {user ? (
             <>
-              <Button size="sm" variant="ghost">
-                Sign out
+              <Button
+                onClick={() => navigate("/")}
+                size="sm"
+                variant="ghost"
+                className="cursor-pointer"
+              >
+                Logout
               </Button>
 
-              <a
-                href="/dashboard"
-                className={buttonVariants({
-                  size: "sm",
-                  className: "flex items-center gap-1",
-                })}
+              <Button
+                onClick={() => navigate("/dashboard")}
+                size="sm"
+                className="flex items-center gap-1 cursor-pointer"
               >
                 Dashboard <ArrowRight className="ml-1.5 size-4" />
-              </a>
+              </Button>
             </>
           ) : (
             <>
-              <a
-                href="/pricing"
-                className={buttonVariants({
-                  size: "sm",
-                  variant: "ghost",
-                })}
+              <Button
+                onClick={() => navigate("/pricing")}
+                size="sm"
+                variant={"ghost"}
+                className="cursor-pointer"
               >
                 Pricing
-              </a>
-              <a
-                href="/sign-in"
-                className={buttonVariants({
-                  size: "sm",
-                  variant: "ghost",
-                })}
+              </Button>
+              <Button
+                onClick={() => navigate("/login")}
+                size="sm"
+                variant={"ghost"}
+                className="cursor-pointer"
               >
-                Sign in
-              </a>
+                Login
+              </Button>
 
               <div className="h-8 w-px bg-gray-200" />
 
-              <a href="/sign-up">
-                <Button className="flex items-center gap-1.5" size={"lg"}>
-                  Sign up <ArrowRight className="" />
-                </Button>
-              </a>
+              <Button
+                onClick={() => navigate("/register")}
+                className="flex items-center gap-1.5 cursor-pointer"
+                size={"lg"}
+              >
+                Register <ArrowRight className="" />
+              </Button>
             </>
           )}
         </div>

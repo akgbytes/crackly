@@ -2,8 +2,10 @@ import { FEATURES } from "../constants/features";
 import { Button } from "../components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import FeatureCard from "../components/FeatureCard";
+import { useAppContext } from "../hooks/useAppContext";
 
 const LandingPage = () => {
+  const { navigate } = useAppContext();
   return (
     <>
       <div className="mb-12 mt-28 sm:mt-40 flex flex-col items-center justify-center text-center h-full mx-auto w-full max-w-screen-xl px-2.5 md:px-20">
@@ -21,11 +23,13 @@ const LandingPage = () => {
           breakdowns, and stay organized with notes and pins.
         </p>
 
-        <a href="/dashboard" target="_blank">
-          <Button size={"lg"} className="mt-5">
-            Get started <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </a>
+        <Button
+          onClick={() => navigate("/dashboard")}
+          size={"lg"}
+          className="mt-5 cursor-pointer"
+        >
+          Get started <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
       </div>
 
       {/* Session Preview */}

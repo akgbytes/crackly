@@ -2,6 +2,8 @@ import type { JSX } from "react";
 import { FiGithub, FiLinkedin } from "react-icons/fi";
 import { FaXTwitter, FaDiscord } from "react-icons/fa6";
 import { Heart } from "lucide-react";
+import { useAppContext } from "../hooks/useAppContext";
+import { Button } from "./ui/button";
 
 const socialLinks: {
   icon: JSX.Element;
@@ -60,6 +62,7 @@ const linkSections: {
 ];
 
 const Footer = () => {
+  const { navigate } = useAppContext();
   return (
     <footer className="w-full  px-4 sm:px-8 md:px-10 py-6 border-t border-gray-200 bg-white/80">
       <div className="mx-auto py-8 flex flex-col gap-10 md:flex-row md:justify-between max-w-screen-xl px-2.5 md:px-20">
@@ -97,15 +100,14 @@ const Footer = () => {
             <div key={title} className="flex flex-col gap-2">
               <h3 className="text-zinc-800 font-semibold">{title}</h3>
               {links.map(({ name, href }) => (
-                <a
+                <Button
+                  variant={"ghost"}
                   key={name}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-primary"
+                  onClick={() => navigate(href)}
+                  className="pl-0 justify-start text-gray-500/80 font-normal hover:bg-transparent hover:text-primary"
                 >
                   {name}
-                </a>
+                </Button>
               ))}
             </div>
           ))}
