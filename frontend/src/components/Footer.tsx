@@ -68,7 +68,7 @@ const Footer = () => {
             <img
               alt="PrepGenie Logo"
               className="h-full w-full object-contain"
-              src="/logo.png"
+              src="/logo-rose.png"
             />
           </div>
 
@@ -84,7 +84,7 @@ const Footer = () => {
                 target="_blank"
                 aria-label={label}
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 hover:scale-105 transition-all"
+                className="hover:text-primary hover:scale-105 transition-all"
               >
                 {icon}
               </a>
@@ -102,7 +102,7 @@ const Footer = () => {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-blue-600"
+                  className="hover:text-primary"
                 >
                   {name}
                 </a>
