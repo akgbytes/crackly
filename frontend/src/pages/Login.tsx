@@ -7,9 +7,33 @@ import {
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
-import { Input } from "../components/ui/input";
+
+import { useForm } from "react-hook-form";
+import { useAppContext } from "../hooks/useAppContext";
+import Input from "../components/Input";
+
+interface LoginForm {
+  email: string;
+  password: string;
+}
 
 const Login = () => {
+  const { navigate } = useAppContext();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>();
+
+  const onSubmit = async (data: LoginForm) => {
+    try {
+      console.log("Login with", data);
+      // API call here
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login failed", error);
+    }
+  };
   return (
     <div className="flex items-center justify-center py-16">
       <Card className="w-[420px] bg-transparent py-6 px-10 text-zinc-800 ">
@@ -21,23 +45,33 @@ const Login = () => {
         </CardHeader>
 
         <CardContent>
-          <form className="mt-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                <label htmlFor="email" className="font-medium">
-                  Email
-                </label>
-                <Input id="email" placeholder="Enter your email" type="email" />
+                <Input
+                  label="Email"
+                  placeholder="Enter your email address"
+                  type="email"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Invalid email address",
+                    },
+                  })}
+                  error={errors.email?.message}
+                />
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <label htmlFor="password" className="font-medium">
-                  Password
-                </label>
                 <Input
-                  id="password"
+                  label="Password"
                   placeholder="Enter your password"
                   type="password"
+                  {...register("password", {
+                    required: "Password is required",
+                  })}
+                  error={errors.password?.message}
                 />
               </div>
 
@@ -59,12 +93,17 @@ const Login = () => {
         </CardContent>
 
         <CardFooter className="flex flex-col space-y-2">
-          <Button className="w-full text-base">Sign In</Button>
+          <Button type="submit" className="w-full text-base">
+            Sign In
+          </Button>
           <p className="text-sm text-center">
             Not registered?{" "}
-            <a href="#" className="text-red-400 hover:underline">
+            <span
+              onClick={() => navigate("/register")}
+              className="text-red-400 hover:underline"
+            >
               Create an account
-            </a>
+            </span>
           </p>
         </CardFooter>
       </Card>
