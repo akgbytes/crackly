@@ -57,7 +57,7 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ image, onChange }) => {
       ) : (
         <div className="relative">
           <img
-            src={previewUrl || ""}
+            src={previewUrl || undefined}
             alt="avatar"
             className="w-20 h-20 rounded-full object-cover border border-rose-200"
           />

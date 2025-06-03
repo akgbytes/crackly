@@ -37,6 +37,17 @@ export const register = asyncHandler(async (req, res) => {
     );
   }
 
+  let avatarUrl;
+  if (req.file) {
+    try {
+      const uploaded = await uploadOnCloudinary(req.file.path);
+      avatarUrl = uploaded?.secure_url;
+      logger.info("Avatar uploaded successfully", { email, avatarUrl });
+    } catch (err: any) {
+      logger.warn(`Avatar upload failed for ${email} due to ${err.message}`);
+    }
+  }
+
   const hashedPassword = await hashPassword(password);
 
   const [user] = await db
@@ -45,6 +56,7 @@ export const register = asyncHandler(async (req, res) => {
       email,
       password: hashedPassword,
       name,
+      avatar: avatarUrl,
     })
     .returning({
       id: users.id,

@@ -9,7 +9,7 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ): void => {
-  console.log("midd", error);
+  console.log("printing from errror middleware: ", error);
   let customError;
 
   if (error instanceof CustomError) {

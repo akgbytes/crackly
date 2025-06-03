@@ -12,6 +12,7 @@ import { useAppContext } from "../hooks/useAppContext";
 import { Controller, useForm } from "react-hook-form";
 import AvatarUpload from "../components/AvatarUpload";
 import Input from "../components/Input";
+import axios from "axios";
 
 interface FormData {
   name: string;
@@ -21,7 +22,7 @@ interface FormData {
 }
 
 const Register = () => {
-  const { navigate } = useAppContext();
+  const { navigate, SERVER_URL } = useAppContext();
   const {
     register,
     handleSubmit,
@@ -31,11 +32,20 @@ const Register = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      console.log("Submitting registration", data);
-      // API call here
-      navigate("/dashboard");
-    } catch (err) {
-      console.error("Registration failed", err);
+      const response = await axios.post(
+        `${SERVER_URL}/api/v1/auth/register`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("register response: ", response.data.data);
+      navigate("/login");
+    } catch (error: any) {
+      console.log("register response: ", error.data.data);
     }
   };
 
@@ -106,23 +116,22 @@ const Register = () => {
                 />
               </div>
             </div>
+            <div className="flex flex-col gap-2 mt-8">
+              <Button type="submit" className="w-full text-base cursor-pointer">
+                Create Account
+              </Button>
+              <p className="text-sm text-center">
+                Already have an account?{" "}
+                <span
+                  onClick={() => navigate("/login")}
+                  className="text-red-400 hover:underline cursor-pointer"
+                >
+                  Login here
+                </span>
+              </p>
+            </div>
           </form>
         </CardContent>
-
-        <CardFooter className="flex flex-col gap-2 mt-8">
-          <Button type="submit" className="w-full text-base cursor-pointer">
-            Create Account
-          </Button>
-          <p className="text-sm text-center">
-            Already have an account?{" "}
-            <span
-              onClick={() => navigate("/login")}
-              className="text-red-400 hover:underline cursor-pointer"
-            >
-              Login here
-            </span>
-          </p>
-        </CardFooter>
       </Card>
     </div>
   );

@@ -5,7 +5,15 @@ import FeatureCard from "../components/FeatureCard";
 import { useAppContext } from "../hooks/useAppContext";
 
 const LandingPage = () => {
-  const { navigate } = useAppContext();
+  const { navigate, user } = useAppContext();
+
+  const handleCTA = () => {
+    if (!user) {
+      navigate("/login");
+    } else {
+      navigate("/dashboard");
+    }
+  };
   return (
     <>
       <div className="mb-12 mt-28 sm:mt-40 flex flex-col items-center justify-center text-center h-full mx-auto w-full max-w-screen-xl px-2.5 md:px-20">
@@ -23,11 +31,7 @@ const LandingPage = () => {
           breakdowns, and stay organized with notes and pins.
         </p>
 
-        <Button
-          onClick={() => navigate("/dashboard")}
-          size={"lg"}
-          className="mt-5 cursor-pointer"
-        >
+        <Button onClick={handleCTA} size={"lg"} className="mt-5 cursor-pointer">
           Get started <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
       </div>

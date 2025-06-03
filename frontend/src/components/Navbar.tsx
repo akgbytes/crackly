@@ -1,10 +1,10 @@
 import { useAppContext } from "../hooks/useAppContext";
+import Profile from "./Profile";
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
 
 export const Navbar = () => {
-  const user = false;
-  const { navigate } = useAppContext();
+  const { navigate, user } = useAppContext();
   return (
     <nav className="sticky z-[100] h-16 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/80 backdrop-blur-lg transition-all">
       <div className="flex h-16 items-center justify-between mx-auto w-full max-w-screen-xl px-2.5 md:px-20">
@@ -15,22 +15,23 @@ export const Navbar = () => {
         <div className="h-full flex items-center space-x-4">
           {user ? (
             <>
-              <Button
+              {/* <Button
                 onClick={() => navigate("/")}
                 size="sm"
                 variant="ghost"
                 className="cursor-pointer"
               >
                 Logout
-              </Button>
+              </Button> */}
 
-              <Button
+              {/* <Button
                 onClick={() => navigate("/dashboard")}
                 size="sm"
                 className="flex items-center gap-1 cursor-pointer"
               >
                 Dashboard <ArrowRight className="ml-1.5 size-4" />
-              </Button>
+              </Button> */}
+              <Profile />
             </>
           ) : (
             <>

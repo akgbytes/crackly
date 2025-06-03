@@ -3,35 +3,46 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
 
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { useAppContext } from "../hooks/useAppContext";
 import Input from "../components/Input";
 
-interface LoginForm {
+import axios from "axios";
+
+interface FormData {
   email: string;
   password: string;
 }
 
 const Login = () => {
-  const { navigate } = useAppContext();
+  const { navigate, SERVER_URL, fetchUser, setLoading } = useAppContext();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginForm>();
+  } = useForm<FormData>();
 
-  const onSubmit = async (data: LoginForm) => {
+  const handleLogin: SubmitHandler<FormData> = async (data) => {
+    setLoading(true);
+
     try {
-      console.log("Login with", data);
-      // API call here
+      const response = await axios.post(
+        `${SERVER_URL}/api/v1/auth/login`,
+        data
+      );
+
+      const { accessToken } = response.data.data;
+
+      localStorage.setItem("token", accessToken);
+      await fetchUser();
       navigate("/dashboard");
-    } catch (error) {
-      console.error("Login failed", error);
+    } catch (error: any) {
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -45,7 +56,7 @@ const Login = () => {
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+          <form onSubmit={handleSubmit(handleLogin)} className="mt-4">
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Input
@@ -89,23 +100,23 @@ const Login = () => {
                 </a>
               </div>
             </div>
+
+            <div className="flex flex-col space-y-2">
+              <Button type="submit" className="w-full text-base">
+                Sign In
+              </Button>
+              <p className="text-sm text-center">
+                Not registered?{" "}
+                <span
+                  onClick={() => navigate("/register")}
+                  className="text-red-400 hover:underline"
+                >
+                  Create an account
+                </span>
+              </p>
+            </div>
           </form>
         </CardContent>
-
-        <CardFooter className="flex flex-col space-y-2">
-          <Button type="submit" className="w-full text-base">
-            Sign In
-          </Button>
-          <p className="text-sm text-center">
-            Not registered?{" "}
-            <span
-              onClick={() => navigate("/register")}
-              className="text-red-400 hover:underline"
-            >
-              Create an account
-            </span>
-          </p>
-        </CardFooter>
       </Card>
     </div>
   );
