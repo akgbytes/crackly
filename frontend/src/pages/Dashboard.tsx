@@ -19,7 +19,7 @@ export const CARD_BG = [
   { id: 10, bgcolor: "linear-gradient(135deg, #fef2f2 0%, #fff8f8 100%)" },
 ];
 
-interface SessionData {
+interface Session {
   id: string;
   role: string;
   importantTopics: string;
@@ -32,7 +32,7 @@ interface SessionData {
 const Dashboard = () => {
   const { navigate, SERVER_URL, user } = useAppContext();
 
-  const [sessions, setSessions] = useState<SessionData[]>([]);
+  const [sessions, setSessions] = useState<Session[]>([]);
 
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
     open: false,
@@ -51,7 +51,7 @@ const Dashboard = () => {
     }
   };
 
-  const deleteSession = async (sessionData: any) => {
+  const deleteSession = async (session: any) => {
     // baad me krunga
   };
 
@@ -71,7 +71,7 @@ const Dashboard = () => {
           />
           <div>
             <h1 className="text-xl font-semibold text-gray-800">
-              Welcome back, {user?.name || "User"} 👋
+              Welcome back, {user?.name || "User"}
             </h1>
             <p className="text-sm text-gray-500">
               Manage your interview prep sessions below

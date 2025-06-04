@@ -14,7 +14,7 @@ import {
   validateInterviewQuestion,
 } from "../validations/ai.validation";
 
-export const generateAIInterviewQuestions = asyncHandler(async (req, res) => {
+export const generateAIQuestions = asyncHandler(async (req, res) => {
   const { role, experience, importantTopics, numberOfQuestions } =
     handleZodError(validateInterviewQuestion(req.body));
 

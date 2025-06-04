@@ -17,6 +17,16 @@ const RoleInfo: React.FC<RoleInfoProps> = ({
   description,
   lastUpdated,
 }) => {
+  console.log(
+    "data receieved in roleInfo: ",
+    role,
+    importantTopics,
+    experience,
+    questions,
+    description,
+    lastUpdated
+  );
+
   const expLabel = `${experience} ${
     Number(experience) === 1 ? "Year" : "Years"
   }`;
@@ -50,14 +60,6 @@ const RoleInfo: React.FC<RoleInfoProps> = ({
               Last Updated: {lastUpdated}
             </div>
           </div>
-        </div>
-
-        {/* Decorative Blobs */}
-        <div className="absolute top-0 right-0 w-[40vw] md:w-[30vw] h-[200px] pointer-events-none z-0 flex items-center justify-center">
-          <div className="size-16 bg-lime-400 blur-[65px] animate-blob1" />
-          <div className="size-16 bg-teal-400 blur-[65px] animate-blob2" />
-          <div className="size-16 bg-cyan-300 blur-[65px] animate-blob3" />
-          <div className="size-16 bg-fuchsia-200 blur-[65px] animate-blob1" />
         </div>
       </div>
     </div>

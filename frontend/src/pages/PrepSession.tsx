@@ -12,10 +12,39 @@ import QuestionCard from "../components/QuestionCard";
 import moment from "moment";
 import Drawer from "../components/Drawer";
 
+type Session = {
+  createdAt: Date;
+  updatedAt: Date;
+  id: string;
+  userId: string;
+  role: string;
+  experience: number;
+  importantTopics: string;
+  description: string;
+};
+
+type Question = {
+  createdAt: Date;
+  updatedAt: Date;
+  id: string;
+  userId: string;
+  sessionId: string;
+  question: string;
+  answer: string;
+  note: string | null;
+  isPinned: boolean;
+};
+
+interface SessionData {
+  session: Session;
+  sessionQuestions: Question[];
+}
+
 const PrepSession = () => {
   const { sessionId } = useParams();
   const { SERVER_URL, navigate } = useAppContext();
-  const [sessionData, setSessionData] = useState<any>(null);
+  const [sessionData, setSessionData] = useState<SessionData | null>(null);
+
   const [error, setError] = useState("");
   const [openLearnMoreDrawer, setOpenLearnMoreDrawer] = useState(false);
   const [explanation, setExplanation] = useState<any>(null);
@@ -25,12 +54,16 @@ const PrepSession = () => {
 
   const fetchSessionDetailsById = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/session/${sessionId}`);
-      if (response.data?.session) {
-        setSessionData(response.data.session);
-      }
+      const response = await axios.get(
+        `${SERVER_URL}/api/v1/sessions/${sessionId}/questions`,
+        { withCredentials: true }
+      );
+
+      console.log("session questions fetch response: ", response.data.data);
+
+      setSessionData(response.data.data);
     } catch (error) {
-      console.error("Error fetching session:", error);
+      console.error("Error fetching session questions:", error);
     }
   };
 
@@ -41,10 +74,16 @@ const PrepSession = () => {
       setIsLoading(true);
       setOpenLearnMoreDrawer(true);
 
-      const response = await axios.post(`${SERVER_URL}/explain`, { question });
+      const response = await axios.post(
+        `${SERVER_URL}/api/v1/ai/generate-explanation`,
+        { question },
+        { withCredentials: true }
+      );
+
+      console.log("explanation response: ", response.data);
 
       if (response.data) {
-        setExplanation(response.data);
+        setExplanation(response.data.data);
       }
     } catch (error) {
       setExplanation(null);
@@ -77,14 +116,14 @@ const PrepSession = () => {
   return (
     <>
       <RoleInfo
-        role={sessionData?.role || ""}
-        importantTopics={sessionData?.importantTopics || ""}
-        experience={sessionData?.experience || "-"}
-        questions={sessionData?.questions?.length || "-"}
-        description={sessionData?.description || ""}
+        role={sessionData?.session.role || ""}
+        importantTopics={sessionData?.session.importantTopics || ""}
+        experience={sessionData?.session.experience || "-"}
+        questions={sessionData?.sessionQuestions.length || "-"}
+        description={sessionData?.session.description || ""}
         lastUpdated={
-          sessionData?.updatedAt
-            ? moment(sessionData.updatedAt).format("DD MMM YYYY")
+          sessionData?.session.updatedAt
+            ? moment(sessionData?.session.updatedAt).format("DD MMM YYYY")
             : "-"
         }
       />
@@ -98,7 +137,7 @@ const PrepSession = () => {
             }`}
           >
             <AnimatePresence>
-              {sessionData?.questions?.map((data: any, index: number) => (
+              {sessionData?.sessionQuestions?.map((data, index) => (
                 <motion.div
                   key={data.id || index}
                   initial={{ opacity: 0, y: -20 }}

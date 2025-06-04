@@ -1,4 +1,4 @@
-import { pgTable, text, integer, uuid, unique } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, uuid, uniqueIndex } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { timestamps } from "./helper";
 
@@ -13,7 +13,5 @@ export const sessions = pgTable(
     description: text("description"),
     ...timestamps,
   },
-  (table) => ({
-    uniqueUserRole: unique().on(table.userId, table.role),
-  })
+  (table) => [uniqueIndex("uniqueRolePerUser").on(table.userId, table.role)]
 );
