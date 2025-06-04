@@ -30,17 +30,11 @@ const Login = () => {
 
   const handleLogin: SubmitHandler<FormData> = async (data) => {
     setLoading(true);
-
     try {
       const response = await axios.post(
         `${SERVER_URL}/api/v1/auth/login`,
-        data,
-        {
-          withCredentials: true,
-        }
+        data
       );
-
-      console.log("login response: ", response.data);
 
       const { accessToken } = response.data.data;
 
@@ -50,13 +44,12 @@ const Login = () => {
       toast.success("Logged in successfully");
       navigate("/dashboard");
     } catch (error: any) {
-      console.log("login error: ", error.response.data);
-
       toast.error(error.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="flex items-center justify-center py-16">
       <Card className="w-[480px] bg-transparent py-6 px-10 text-zinc-800 ">
@@ -109,6 +102,20 @@ const Login = () => {
                   })}
                   error={errors.password?.message}
                 />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <input
+                    id="remember"
+                    type="checkbox"
+                    className="h-4 w-4 rounded border border-gray-300"
+                  />
+                  <label htmlFor="remember">Remember me</label>
+                </div>
+                <a href="#" className="text-sm text-blue-500 hover:underline">
+                  Forgot password?
+                </a>
               </div>
             </div>
 

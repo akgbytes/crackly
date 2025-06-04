@@ -15,22 +15,14 @@ export const Navbar = () => {
         <div className="h-full flex items-center space-x-4">
           {user ? (
             <>
-              {/* <Button
-                onClick={() => navigate("/")}
+              <Button
+                onClick={() => navigate("/pricing")}
                 size="sm"
-                variant="ghost"
+                variant={"ghost"}
                 className="cursor-pointer"
               >
-                Logout
-              </Button> */}
-
-              {/* <Button
-                onClick={() => navigate("/dashboard")}
-                size="sm"
-                className="flex items-center gap-1 cursor-pointer"
-              >
-                Dashboard <ArrowRight className="ml-1.5 size-4" />
-              </Button> */}
+                Pricing
+              </Button>
               <Profile />
             </>
           ) : (

@@ -24,7 +24,7 @@ const App = () => {
 
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <ToastContainer position="top-right" autoClose={3000} />
+        <ToastContainer position="top-right" autoClose={2000} />
         <Footer />
       </main>
     </div>

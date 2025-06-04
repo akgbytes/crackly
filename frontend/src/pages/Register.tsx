@@ -13,6 +13,7 @@ import { Controller, useForm } from "react-hook-form";
 import AvatarUpload from "../components/AvatarUpload";
 import Input from "../components/Input";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 interface FormData {
   name: string;
@@ -39,24 +40,28 @@ const Register = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          withCredentials: true,
         }
       );
 
-      console.log("register response: ", response.data.data);
+      console.log("register response: ", response.data);
+
+      toast.success("User registered successfully");
       navigate("/login");
     } catch (error: any) {
-      console.log("register response: ", error.data.data);
+      console.log("register error: ", error.response.data);
+      toast.error(error.response?.data?.message || "Registration failed");
     }
   };
 
   return (
     <div className="flex items-center justify-center py-16">
-      <Card className="bg-transparent w-[450px] py-6 px-10 text-zinc-800">
+      <Card className="bg-transparent w-[480px] py-6 px-10 text-zinc-800">
         <CardHeader>
-          <CardTitle className="text-4xl">Create an Account</CardTitle>
-          {/* <CardDescription className="text-base font-normal">
-            Join us today by entering your details below.
-          </CardDescription> */}
+          <CardTitle className="text-4xl">Create Your Account</CardTitle>
+          <CardDescription className="text-base font-normal">
+            Join us today and start preparing for your next big opportunity.
+          </CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -77,7 +82,17 @@ const Register = () => {
                 <Input
                   label="Name"
                   placeholder="Enter your name"
-                  {...register("name", { required: "Name is required" })}
+                  {...register("name", {
+                    required: "Name is required",
+                    minLength: {
+                      value: 6,
+                      message: "Name must be at least 6 characters long",
+                    },
+                    maxLength: {
+                      value: 20,
+                      message: "Name must be at most 20 characters long",
+                    },
+                  })}
                   error={errors.name?.message}
                 />
               </div>
@@ -109,14 +124,23 @@ const Register = () => {
                     required: "Password is required",
                     minLength: {
                       value: 6,
-                      message: "Minimum 6 characters required",
+                      message: "Password must be at least 6 characters long",
+                    },
+                    maxLength: {
+                      value: 16,
+                      message: "Password must be at most 16 characters long",
+                    },
+                    pattern: {
+                      value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/,
+                      message:
+                        "Password must include at least one uppercase, lowercase, number, and special character.",
                     },
                   })}
                   error={errors.password?.message}
                 />
               </div>
             </div>
-            <div className="flex flex-col gap-2 mt-8">
+            <CardFooter className="flex flex-col gap-2 mt-8 px-0">
               <Button type="submit" className="w-full text-base cursor-pointer">
                 Create Account
               </Button>
@@ -129,7 +153,7 @@ const Register = () => {
                   Login here
                 </span>
               </p>
-            </div>
+            </CardFooter>
           </form>
         </CardContent>
       </Card>

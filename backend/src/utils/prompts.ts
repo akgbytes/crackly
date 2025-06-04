@@ -8,7 +8,7 @@ You are an AI assistant specialized in generating technical interview content.
 
 Instructions:
 - Target Role: "${role}"
-- Candidate Experience: ${experience} years
+- Candidate Experience: ${experience} ${experience <= 0 ? "year" : "years"} 
 - Focus Areas: ${importantTopics}
 - Generate ${numberOfQuestions} technical interview questions.
 - For each question, provide a clear and concise answer.

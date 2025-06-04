@@ -7,7 +7,7 @@ import { isLoggedIn } from "../middlewares/auth.middlewares";
 
 const router = Router();
 
-router.post("/questions", isLoggedIn, generateAIInterviewQuestions);
-router.post("/explanations", isLoggedIn, generateAIConceptExplanation);
+router.post("/generate-questions", isLoggedIn, generateAIInterviewQuestions);
+router.post("/generate-explanation", isLoggedIn, generateAIConceptExplanation);
 
 export default router;

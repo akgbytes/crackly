@@ -18,7 +18,7 @@ import {
 } from "../utils/helpers";
 import { ApiResponse } from "../utils/ApiResponse";
 import { accessTokenOptions, refreshTokenOptions } from "../configs/cookies";
-import { uploadOnCloudinary } from "./cloudinary";
+import { uploadOnCloudinary } from "../configs/cloudinary";
 
 export const register = asyncHandler(async (req, res) => {
   const { email, password, name } = handleZodError(validateRegister(req.body));

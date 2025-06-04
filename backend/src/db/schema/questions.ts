@@ -5,6 +5,7 @@ import { sessions } from "./sessions";
 
 export const questions = pgTable("questions", {
   id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
   sessionId: uuid("session_id").references(() => sessions.id, {
     onDelete: "cascade",
   }),
@@ -12,7 +13,6 @@ export const questions = pgTable("questions", {
   answer: text("answer").notNull(),
   note: text("note"),
   isPinned: boolean("is_pinned").default(false),
-  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
 
   ...timestamps,
 });

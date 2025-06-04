@@ -12,7 +12,6 @@ interface User {
   id: string;
   name: string;
   email: string;
-  token?: string;
   avatar: string;
 }
 
@@ -43,6 +42,7 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchUser = async () => {
+    console.log("Entered fetch user");
     const accessToken = localStorage.getItem("token");
     if (!accessToken) {
       setLoading(false);
@@ -56,8 +56,11 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
         },
       });
 
+      console.log("Fetched user data: ", response.data.data);
+
       setUser(response.data.data);
     } catch (error) {
+      console.log("error while fetching data: ", error);
       clearUser();
     } finally {
       setLoading(false);

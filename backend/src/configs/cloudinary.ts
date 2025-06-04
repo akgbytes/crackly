@@ -1,9 +1,9 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs/promises";
-import { env } from "../configs/env";
+import { env } from "./env";
 import { CustomError } from "../utils/CustomError";
 import { ResponseStatus } from "../utils/constants";
-import { logger } from "../configs/logger";
+import { logger } from "./logger";
 
 cloudinary.config({
   cloud_name: env.CLOUDINARY_NAME,

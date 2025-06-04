@@ -1,35 +1,50 @@
+import axios from "axios";
 import { useAppContext } from "../hooks/useAppContext";
-import { Button } from "./ui/button";
+import { toast } from "react-toastify";
 
 const Profile = () => {
-  const { navigate, user, clearUser } = useAppContext();
+  const { navigate, user, clearUser, SERVER_URL } = useAppContext();
 
-  const handleLogout = () => {
-    clearUser();
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        `${SERVER_URL}/api/v1/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      clearUser();
+      toast.success("Logged out successfully");
+      navigate("/");
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Failed to log out. Please try again."
+      );
+    }
   };
-  return (
-    user && (
-      <div className="flex items-center">
-        <img
-          src={user?.avatar}
-          alt="user-avatar"
-          className="size-10 object-cover rounded-full mr-3"
-        />
 
-        <div className="mt-2">
-          <div className="text-[15px] leading-3 font-bold">{user?.name}</div>
-          <Button
-            className="text-red-400 hover:text-primary hover:bg-transparent cursor-pointer font-semibold"
-            variant={"ghost"}
-            size={"sm"}
-            onClick={handleLogout}
-          >
-            Logout
-          </Button>
-        </div>
+  if (!user) return null;
+
+  return (
+    <div className="flex items-center space-x-3">
+      <img
+        src={user.avatar}
+        alt="user-avatar"
+        className="w-10 h-10 rounded-full object-cover"
+      />
+
+      <div>
+        <div className="text-sm font-semibold leading-tight">{user.name}</div>
+        <button
+          onClick={handleLogout}
+          className="text-sm text-red-400 hover:underline cursor-pointer font-medium bg-transparent border-none p-0"
+        >
+          Logout
+        </button>
       </div>
-    )
+    </div>
   );
 };
 

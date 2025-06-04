@@ -3,7 +3,7 @@ import { z } from "zod";
 export const interviewQuestionSchema = z.object({
   role: z.string().nonempty({ message: "Role cannot be empty" }),
   experience: z
-    .number({ invalid_type_error: "Experience field must be a number" })
+    .number({ invalid_type_error: "Experience must be a number" })
     .min(0, { message: "Experience must be at least 0 years" })
     .max(50, { message: "Experience cannot exceed 50 years" }),
 
