@@ -5,6 +5,8 @@ import axios from "axios";
 import SessionCard from "../components/SessionCard";
 import moment from "moment";
 import CreateSessionDialog from "../components/CreateSessionDialog";
+import DeleteSessionDialog from "../components/DeleteSessionDialog";
+import { toast } from "react-toastify";
 
 export const CARD_BG = [
   { id: 1, bgcolor: "linear-gradient(135deg, #e6f8f3 0%, #f7fcfa 100%)" },
@@ -19,7 +21,7 @@ export const CARD_BG = [
   { id: 10, bgcolor: "linear-gradient(135deg, #fef2f2 0%, #fff8f8 100%)" },
 ];
 
-interface Session {
+export interface Session {
   id: string;
   role: string;
   importantTopics: string;
@@ -34,7 +36,10 @@ const Dashboard = () => {
 
   const [sessions, setSessions] = useState<Session[]>([]);
 
-  const [openDeleteAlert, setOpenDeleteAlert] = useState({
+  const [openDeleteAlert, setOpenDeleteAlert] = useState<{
+    open: boolean;
+    data: Session | null;
+  }>({
     open: false,
     data: null,
   });
@@ -51,8 +56,24 @@ const Dashboard = () => {
     }
   };
 
-  const deleteSession = async (session: any) => {
-    // baad me krunga
+  const deleteSession = async (session: Session | null) => {
+    console.log("entered", session);
+    if (!session) return;
+    try {
+      await axios.delete(`${SERVER_URL}/api/v1/sessions/${session.id}`, {
+        withCredentials: true,
+      });
+
+      console.log("deleted");
+
+      toast.success("Session deleted successfully");
+
+      setOpenDeleteAlert({ open: false, data: null });
+      fetchAllSession();
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
 
   useEffect(() => {
@@ -107,10 +128,17 @@ text-sm font-semibold text-white px-5 py-2.5 rounded-full hover:shadow-xl transi
                 : ""
             }
             onSelect={() => navigate(`/prep-session/${data?.id}`)}
-            onDelete={() => setOpenDeleteAlert({ open: true, data: null })}
+            onDelete={() => setOpenDeleteAlert({ open: true, data })}
           />
         ))}
       </div>
+
+      <DeleteSessionDialog
+        open={openDeleteAlert.open}
+        session={openDeleteAlert.data}
+        onClose={() => setOpenDeleteAlert({ open: false, data: null })}
+        onDelete={deleteSession}
+      />
     </div>
   );
 };

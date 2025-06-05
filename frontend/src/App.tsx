@@ -7,7 +7,6 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import PrepSession from "./pages/PrepSession";
 import { Navbar } from "./components/Navbar";
-import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
@@ -25,7 +24,6 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
         <ToastContainer position="top-right" autoClose={2000} />
-        <Footer />
       </main>
     </div>
   );

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useAppContext } from "../hooks/useAppContext";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { LuCircleAlert } from "react-icons/lu";
+import { LuCircleAlert, LuListCollapse } from "react-icons/lu";
 import AIResponsePreview from "../components/AIResponsePreview";
 import SkeletonLoader from "../components/SkeletonLoader";
 import axios from "axios";
@@ -11,6 +11,8 @@ import RoleInfo from "../components/RoleInfo";
 import QuestionCard from "../components/QuestionCard";
 import moment from "moment";
 import Drawer from "../components/Drawer";
+import { toast } from "react-toastify";
+import Spinner from "../components/Spinner";
 
 type Session = {
   createdAt: Date;
@@ -42,7 +44,7 @@ interface SessionData {
 
 const PrepSession = () => {
   const { sessionId } = useParams();
-  const { SERVER_URL, navigate } = useAppContext();
+  const { SERVER_URL } = useAppContext();
   const [sessionData, setSessionData] = useState<SessionData | null>(null);
 
   const [error, setError] = useState("");
@@ -50,7 +52,7 @@ const PrepSession = () => {
   const [explanation, setExplanation] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // const [isUpdateLoader, setIsUpdateLoader] = useState(false);
+  const [isUpdateLoader, setIsUpdateLoader] = useState(false);
 
   const fetchSessionDetailsById = async () => {
     try {
@@ -67,7 +69,7 @@ const PrepSession = () => {
     }
   };
 
-  const generateConceptExplanation = async (question: string) => {
+  const generateConceptExplanation = async (question: string, id: string) => {
     try {
       setError("");
       setExplanation(null);
@@ -75,7 +77,7 @@ const PrepSession = () => {
       setOpenLearnMoreDrawer(true);
 
       const response = await axios.post(
-        `${SERVER_URL}/api/v1/ai/generate-explanation`,
+        `${SERVER_URL}/api/v1/sessions/${sessionData?.session.id}/question/${id}/explain`,
         { question },
         { withCredentials: true }
       );
@@ -97,17 +99,42 @@ const PrepSession = () => {
   const toggleQuestionPinStatus = async (questionId: string) => {
     try {
       const response = await axios.post(
-        `${SERVER_URL}/question/pin/${questionId}`
+        `${SERVER_URL}/api/v1/sessions/${sessionData?.session.id}/question/${questionId}/pin`,
+        {},
+        { withCredentials: true }
       );
-      if (response.data?.question) {
-        fetchSessionDetailsById();
-      }
+
+      console.log("toggle response: ", response.data);
+      toast.success("Question Pinned Successfully");
+      fetchSessionDetailsById();
     } catch (error) {
       console.error("Pin toggle error:", error);
     }
   };
 
-  // const uploadMoreQuestions = async () => {};
+  const uploadMoreQuestions = async () => {
+    const previousQuestions = sessionData?.sessionQuestions.map(
+      ({ question }) => question
+    );
+    try {
+      setIsUpdateLoader(true);
+      const response = await axios.post(
+        `${SERVER_URL}/api/v1/sessions/${sessionData?.session.id}/generate/more`,
+        {
+          questions: previousQuestions,
+        },
+        { withCredentials: true }
+      );
+
+      console.log("load more questions response: ", response.data);
+      fetchSessionDetailsById();
+    } catch (error: any) {
+      console.log("load more questions error: ", error.response.data.message);
+      setError(error.response.data.message);
+    } finally {
+      setIsUpdateLoader(false);
+    }
+  };
 
   useEffect(() => {
     if (sessionId) fetchSessionDetailsById();
@@ -153,38 +180,60 @@ const PrepSession = () => {
                   layout
                   layoutId={`question-${data.id || index}`}
                 >
-                  <QuestionCard
-                    question={data?.question}
-                    answer={data?.answer}
-                    onLearnMore={() =>
-                      generateConceptExplanation(data.question)
-                    }
-                    isPinned={data?.isPinned}
-                    onTogglePin={() => toggleQuestionPinStatus(data.id)}
-                  />
+                  <>
+                    <QuestionCard
+                      question={data?.question}
+                      answer={data?.answer}
+                      onLearnMore={() =>
+                        generateConceptExplanation(data.question, data.id)
+                      }
+                      isPinned={data?.isPinned}
+                      onTogglePin={() => toggleQuestionPinStatus(data.id)}
+                    />
+
+                    {!isLoading &&
+                      sessionData.sessionQuestions?.length === index + 1 && (
+                        <div className="flex items-center justify-center mt-5">
+                          <button
+                            className="flex items-center gap-3 text-sm text-black font-medium bg-background px-5 py-2 mr-2 rounded text-nowrap cursor-pointer"
+                            disabled={isLoading || isUpdateLoader}
+                            onClick={uploadMoreQuestions}
+                          >
+                            {isUpdateLoader ? (
+                              <Spinner />
+                            ) : (
+                              <LuListCollapse className="text-lg" />
+                            )}
+                            {"Load More"}
+                          </button>
+                        </div>
+                      )}
+                  </>
                 </motion.div>
               ))}
             </AnimatePresence>
           </div>
         </div>
 
-        <Drawer
-          isOpen={openLearnMoreDrawer}
-          onClose={() => setOpenLearnMoreDrawer(false)}
-          title={!isLoading && explanation?.title}
-        >
-          {error && (
-            <p className="flex gap-2 text-sm text-amber-600 font-medium">
-              <LuCircleAlert className="mt-1" />
-              {error}
-            </p>
-          )}
+        <div>
+          <Drawer
+            isOpen={openLearnMoreDrawer}
+            onClose={() => setOpenLearnMoreDrawer(false)}
+            title={!isLoading && explanation?.title}
+          >
+            {error && (
+              <p className="flex gap-2 text-sm text-amber-600 font-medium">
+                <LuCircleAlert className="mt-1" />
+                {error}
+              </p>
+            )}
 
-          {isLoading && <SkeletonLoader />}
-          {!isLoading && explanation && (
-            <AIResponsePreview content={explanation?.explanation} />
-          )}
-        </Drawer>
+            {isLoading && <SkeletonLoader />}
+            {!isLoading && explanation && (
+              <AIResponsePreview content={explanation?.explanation} />
+            )}
+          </Drawer>
+        </div>
       </div>
     </>
   );

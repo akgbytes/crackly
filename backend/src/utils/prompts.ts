@@ -28,6 +28,40 @@ Important Guidelines:
 - The array should be complete, well-formatted, and parseable.
 `;
 
+export const generateMoreQuestionsPrompt = (
+  role: string,
+  experience: number,
+  importantTopics: string,
+  numberOfQuestions: number,
+  questions: string
+) => `
+You are an AI assistant specialized in generating technical interview content.
+
+Previous generated questions:
+${questions}
+
+Instructions:
+- Generate ${numberOfQuestions} more technical interview questions.
+- For each question, provide a clear and concise answer.
+- Target Role: "${role}"
+- Candidate Experience: ${experience} ${experience <= 0 ? "year" : "years"} 
+- Focus Areas: ${importantTopics}
+
+Output Format:
+Return ONLY a valid JSON array structured like this:
+[
+  {
+    "question": "Sample question?",
+    "answer": "Sample answer."
+  },
+  ...
+]
+
+Important Guidelines:
+- Ensure the output is **only** the JSON array—no commentary, markdown, or extra text.
+- The array should be complete, well-formatted, and parseable.
+`;
+
 export const generateConceptExplanationPrompt = (question: string) => `
 You are an AI assistant trained to explain technical concepts behind interview questions.
 

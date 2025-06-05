@@ -3,6 +3,7 @@ import { Button } from "../components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import FeatureCard from "../components/FeatureCard";
 import { useAppContext } from "../hooks/useAppContext";
+import Footer from "../components/Footer";
 
 const LandingPage = () => {
   const { navigate, user } = useAppContext();
@@ -67,6 +68,7 @@ const LandingPage = () => {
 
         <FeatureCard features={FEATURES} />
       </div>
+      <Footer />
     </>
   );
 };

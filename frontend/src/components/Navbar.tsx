@@ -1,10 +1,32 @@
+import axios from "axios";
 import { useAppContext } from "../hooks/useAppContext";
-import Profile from "./Profile";
+
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
+import { toast } from "react-toastify";
 
 export const Navbar = () => {
-  const { navigate, user } = useAppContext();
+  const { navigate, user, clearUser, SERVER_URL } = useAppContext();
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        `${SERVER_URL}/api/v1/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      clearUser();
+      toast.success("Logged out successfully");
+      navigate("/");
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Failed to log out. Please try again."
+      );
+    }
+  };
+
   return (
     <nav className="sticky z-[100] h-16 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/80 backdrop-blur-lg transition-all">
       <div className="flex h-16 items-center justify-between mx-auto w-full max-w-screen-xl px-2.5 md:px-20">
@@ -23,7 +45,22 @@ export const Navbar = () => {
               >
                 Pricing
               </Button>
-              <Profile />
+              <Button
+                onClick={handleLogout}
+                size="sm"
+                variant="ghost"
+                className="cursor-pointer"
+              >
+                Logout
+              </Button>
+
+              <Button
+                onClick={() => navigate("/dashboard")}
+                size="sm"
+                className="flex items-center gap-1 cursor-pointer"
+              >
+                Dashboard <ArrowRight className="ml-1.5 size-4" />
+              </Button>
             </>
           ) : (
             <>

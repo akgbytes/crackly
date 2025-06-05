@@ -7,6 +7,7 @@ import {
   generateAIExplanation,
   togglePinQuestion,
   updateQuestionNote,
+  generateMoreQuestions,
 } from "../controllers/sessions.controllers";
 import { isLoggedIn } from "../middlewares/auth.middlewares";
 
@@ -21,6 +22,7 @@ router.post(
   isLoggedIn,
   generateAIExplanation
 );
+router.post("/:sessionId/generate/more", isLoggedIn, generateMoreQuestions);
 router.post(
   "/:sessionId/question/:questionId/pin",
   isLoggedIn,

@@ -14,7 +14,7 @@ import {
 } from "./ui/dialog";
 import Input from "./Input";
 import { Button } from "./ui/button";
-import { LoaderCircle } from "lucide-react";
+import Spinner from "./Spinner";
 
 interface SessionForm {
   role: string;
@@ -137,7 +137,7 @@ const CreateSessionDialog = ({
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? (
                 <div className="flex items-center gap-2">
-                  <LoaderCircle className="animate-spin w-5 h-5 text-blue-600" />
+                  <Spinner />
                   Creating Session
                 </div>
               ) : (
