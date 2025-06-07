@@ -11,7 +11,7 @@ import NotFound from "./pages/NotFound";
 
 const App = () => {
   return (
-    <div className="min-h-[calc(100vh-1px)] flex flex-col antialiased grainy">
+    <div className="min-h-[calc(100vh-1px)] flex flex-col antialiased">
       <main className="relative flex-1 flex flex-col">
         <Navbar />
         <Routes>
@@ -20,7 +20,6 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/prep-session/:sessionId" element={<PrepSession />} />
-
           <Route path="*" element={<NotFound />} />
         </Routes>
         <ToastContainer position="top-right" autoClose={2000} />
