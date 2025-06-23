@@ -13,21 +13,23 @@ import moment from "moment";
 import Drawer from "../components/Drawer";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
+import { Card, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 type Session = {
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   id: string;
   userId: string;
   role: string;
   experience: number;
   importantTopics: string;
-  description: string;
 };
 
 type Question = {
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   id: string;
   userId: string;
   sessionId: string;
@@ -42,9 +44,9 @@ interface SessionData {
   sessionQuestions: Question[];
 }
 
-const PrepSession = () => {
+const PrepSession2 = () => {
   const { sessionId } = useParams();
-  const { SERVER_URL } = useAppContext();
+  const { SERVER_URL, navigate } = useAppContext();
   const [sessionData, setSessionData] = useState<SessionData | null>(null);
 
   const [error, setError] = useState("");
@@ -140,103 +142,129 @@ const PrepSession = () => {
     if (sessionId) fetchSessionDetailsById();
   }, [sessionId]);
 
+  if (!sessionData) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Card className="max-w-md mx-auto">
+          <CardContent className="p-6 text-center">
+            <h3 className="text-lg font-semibold mb-2">Session not found</h3>
+            <p className="text-gray-600 mb-4">
+              The session you're looking for doesn't exist.
+            </p>
+            <Button onClick={() => navigate("/dashboard")}>
+              Back to Dashboard
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
-    <>
-      <RoleInfo
-        role={sessionData?.session.role || ""}
-        importantTopics={sessionData?.session.importantTopics || ""}
-        experience={sessionData?.session.experience || "-"}
-        questions={sessionData?.sessionQuestions.length || "-"}
-        description={sessionData?.session.description || ""}
-        lastUpdated={
-          sessionData?.session.updatedAt
-            ? moment(sessionData?.session.updatedAt).format("DD MMM YYYY")
-            : "-"
-        }
-      />
-
-      <div className="container mx-auto pt-4 pb-4 px-4 md:px-0">
-        <h2 className="text-lg font-semibold text-black">Interview Q & A</h2>
-        <div className="grid grid-cols-12 gap-4 mt-5 mb-10">
-          <div
-            className={`col-span-12 ${
-              openLearnMoreDrawer ? "md:col-span-7" : "md:col-span-8"
-            }`}
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/dashboard")}
+            className="mb-4"
           >
-            <AnimatePresence>
-              {sessionData?.sessionQuestions?.map((data, index) => (
-                <motion.div
-                  key={data.id || index}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{
-                    duration: 0.4,
-                    type: "spring",
-                    stiffness: 100,
-                    delay: index * 0.1,
-                    damping: 15,
-                  }}
-                  layout
-                  layoutId={`question-${data.id || index}`}
-                >
-                  <>
-                    <QuestionCard
-                      question={data?.question}
-                      answer={data?.answer}
-                      onLearnMore={() =>
-                        generateConceptExplanation(data.question, data.id)
-                      }
-                      isPinned={data?.isPinned}
-                      onTogglePin={() => toggleQuestionPinStatus(data.id)}
-                    />
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Dashboard
+          </Button>
+        </div>
+        <RoleInfo
+          role={sessionData?.session.role || ""}
+          importantTopics={sessionData?.session.importantTopics || ""}
+          experience={sessionData?.session.experience}
+          questions={sessionData?.sessionQuestions.length}
+          createdAt={sessionData?.session.createdAt}
+        />
 
-                    {!isLoading &&
-                      sessionData.sessionQuestions?.length === index + 1 && (
-                        <div className="flex items-center justify-center mt-5">
-                          <button
-                            className="flex items-center gap-3 text-sm text-black font-medium bg-background px-5 py-2 mr-2 rounded text-nowrap cursor-pointer"
-                            disabled={isLoading || isUpdateLoader}
-                            onClick={uploadMoreQuestions}
-                          >
-                            {isUpdateLoader ? (
-                              <Spinner />
-                            ) : (
-                              <LuListCollapse className="text-lg" />
-                            )}
-                            {"Load More"}
-                          </button>
-                        </div>
-                      )}
-                  </>
-                </motion.div>
-              ))}
-            </AnimatePresence>
+        <div className="container mx-auto pt-4 pb-4 px-4 md:px-0">
+          <h2 className="text-lg font-semibold text-black">Interview Q & A</h2>
+          <div className="grid grid-cols-12 gap-4 mt-5 mb-10">
+            <div
+              className={`col-span-12 ${
+                openLearnMoreDrawer ? "md:col-span-7" : "md:col-span-8"
+              }`}
+            >
+              <AnimatePresence>
+                {sessionData?.sessionQuestions?.map((data, index) => (
+                  <motion.div
+                    key={data.id || index}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{
+                      duration: 0.4,
+                      type: "spring",
+                      stiffness: 100,
+                      delay: index * 0.1,
+                      damping: 15,
+                    }}
+                    layout
+                    layoutId={`question-${data.id || index}`}
+                  >
+                    <>
+                      <QuestionCard
+                        index={index}
+                        question={data?.question}
+                        answer={data?.answer}
+                        onLearnMore={() =>
+                          generateConceptExplanation(data.question, data.id)
+                        }
+                        isPinned={data?.isPinned}
+                        onTogglePin={() => toggleQuestionPinStatus(data.id)}
+                      />
+
+                      {!isLoading &&
+                        sessionData.sessionQuestions?.length === index + 1 && (
+                          <div className="flex items-center justify-center mt-5">
+                            <button
+                              className="flex items-center gap-3 text-sm text-black font-medium bg-background px-5 py-2 mr-2 rounded text-nowrap cursor-pointer"
+                              disabled={isLoading || isUpdateLoader}
+                              onClick={uploadMoreQuestions}
+                            >
+                              {isUpdateLoader ? (
+                                <Spinner />
+                              ) : (
+                                <LuListCollapse className="text-lg" />
+                              )}
+                              {"Load More"}
+                            </button>
+                          </div>
+                        )}
+                    </>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          <div>
+            <Drawer
+              isOpen={openLearnMoreDrawer}
+              onClose={() => setOpenLearnMoreDrawer(false)}
+              title={!isLoading && explanation?.title}
+            >
+              {error && (
+                <p className="flex gap-2 text-sm text-amber-600 font-medium">
+                  <LuCircleAlert className="mt-1" />
+                  {error}
+                </p>
+              )}
+
+              {isLoading && <SkeletonLoader />}
+              {!isLoading && explanation && (
+                <AIResponsePreview content={explanation?.explanation} />
+              )}
+            </Drawer>
           </div>
         </div>
-
-        <div>
-          <Drawer
-            isOpen={openLearnMoreDrawer}
-            onClose={() => setOpenLearnMoreDrawer(false)}
-            title={!isLoading && explanation?.title}
-          >
-            {error && (
-              <p className="flex gap-2 text-sm text-amber-600 font-medium">
-                <LuCircleAlert className="mt-1" />
-                {error}
-              </p>
-            )}
-
-            {isLoading && <SkeletonLoader />}
-            {!isLoading && explanation && (
-              <AIResponsePreview content={explanation?.explanation} />
-            )}
-          </Drawer>
-        </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default PrepSession;
+export default PrepSession2;

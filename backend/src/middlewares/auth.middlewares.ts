@@ -10,20 +10,21 @@ export const isLoggedIn = async (
   res: Response,
   next: NextFunction
 ) => {
-  const accessToken =
-    req.cookies?.accessToken ?? req.headers.authorization?.split(" ")[1];
+  console.log("cookies: ", req.cookies);
+  const { jwtToken } = req.cookies;
+  console.log("jwt: ", jwtToken);
 
-  if (!accessToken)
-    throw new CustomError(ResponseStatus.Unauthorized, "Access token missing");
+  if (!jwtToken)
+    throw new CustomError(ResponseStatus.Unauthorized, "JWT token is missing");
 
   try {
-    const decoded = jwt.verify(accessToken, env.ACCESS_TOKEN_SECRET);
+    const decoded = jwt.verify(jwtToken, env.JWT_SECRET);
     req.user = decoded as decodedUser;
     next();
   } catch (error) {
     throw new CustomError(
       ResponseStatus.Unauthorized,
-      "Invalid or expired access token"
+      "Invalid or expired JWT"
     );
   }
 };

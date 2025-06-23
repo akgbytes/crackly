@@ -1,160 +1,81 @@
 import asyncHandler from "../utils/asyncHandler";
-import { handleZodError } from "../utils/handleZodError";
-import {
-  validateLogin,
-  validateRegister,
-} from "../validations/auth.validation";
 import { logger } from "../configs/logger";
 import { db } from "../db";
 import { users } from "../db/schema/users";
 import { eq } from "drizzle-orm";
 import { CustomError } from "../utils/CustomError";
 import { ResponseStatus } from "../utils/constants";
-import {
-  createHash,
-  generateAccessRefreshToken,
-  hashPassword,
-  verifyPassword,
-} from "../utils/helpers";
+import { generateJWT } from "../utils/helpers";
 import { ApiResponse } from "../utils/ApiResponse";
-import { accessTokenOptions, refreshTokenOptions } from "../configs/cookies";
-import { uploadOnCloudinary } from "../configs/cloudinary";
+import { verifyGoogleToken } from "../utils/verifyGoogleToken";
+import { env } from "../configs/env";
+import ms, { StringValue } from "ms";
 
-export const register = asyncHandler(async (req, res) => {
-  const { email, password, name } = handleZodError(validateRegister(req.body));
+export const googleLogin = asyncHandler(async (req, res) => {
+  console.log("data in body: ", req.body);
+  const { token } = req.body;
+  const payload = await verifyGoogleToken(token);
 
-  logger.info("Registration attempt", { email, ip: req.ip });
+  console.log("payload: ", payload);
+
+  const { email, name, picture } = payload;
+
+  if (!email || !name || !picture) {
+    throw new CustomError(200, "");
+  }
 
   const [existingUser] = await db
     .select()
     .from(users)
     .where(eq(users.email, email));
 
-  if (existingUser) {
-    throw new CustomError(
-      ResponseStatus.Conflict,
-      "Email is already registered"
-    );
-  }
-
-  let avatarUrl;
-  if (req.file) {
-    try {
-      const uploaded = await uploadOnCloudinary(req.file.path);
-      avatarUrl = uploaded?.secure_url;
-      logger.info("Avatar uploaded successfully", { email, avatarUrl });
-    } catch (err: any) {
-      logger.warn(`Avatar upload failed for ${email} due to ${err.message}`);
-    }
-  }
-
-  const hashedPassword = await hashPassword(password);
-
-  const [user] = await db
-    .insert(users)
-    .values({
-      email,
-      password: hashedPassword,
-      name,
-      avatar: avatarUrl,
-    })
-    .returning({
-      id: users.id,
-      email: users.email,
-      name: users.name,
-      avatar: users.avatar,
-    });
-
-  logger.info("User registered successfully", {
-    email,
-    userId: user.id,
-    ip: req.ip,
-  });
-
-  res
-    .status(ResponseStatus.Success)
-    .json(
-      new ApiResponse(
-        ResponseStatus.Success,
-        "User registered successfully",
-        user
-      )
-    );
-});
-
-export const login = asyncHandler(async (req, res) => {
-  const { email, password } = handleZodError(validateLogin(req.body));
-
-  const [user] = await db.select().from(users).where(eq(users.email, email));
+  let user = existingUser;
 
   if (!user) {
-    throw new CustomError(ResponseStatus.Unauthorized, "Invalid credentials");
+    const [newUser] = await db
+      .insert(users)
+      .values({
+        email,
+        name,
+        avatar: picture,
+      })
+      .returning();
+    user = newUser;
   }
 
-  const isPasswordCorrect = await verifyPassword(user.password, password);
+  const jwtToken = generateJWT({ id: user.id, email: user.email });
 
-  if (!isPasswordCorrect) {
-    throw new CustomError(ResponseStatus.Unauthorized, "Invalid credentials");
-  }
-
-  const { accessToken, refreshToken } = generateAccessRefreshToken(user);
-
-  const hashedToken = createHash(refreshToken);
-
-  await db
-    .update(users)
-    .set({ refreshToken: hashedToken })
-    .where(eq(users.id, user.id));
-
-  logger.info("User logged in", {
-    email: user.email,
-    userId: user.id,
-    ip: req.ip,
-  });
+  logger.info(`${email} logged in via Google`);
 
   res
-    .status(ResponseStatus.Success)
-    .cookie("accessToken", accessToken, accessTokenOptions)
-    .cookie("refreshToken", refreshToken, refreshTokenOptions)
-    .json(
-      new ApiResponse(ResponseStatus.Success, "Logged in successfully", {
-        accessToken,
-        refreshToken,
-      })
-    );
+    .status(200)
+    .cookie("jwtToken", jwtToken, {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "lax" as const,
+      maxAge: ms(env.JWT_EXPIRY as StringValue),
+    })
+    .json(new ApiResponse(200, "Google login successful", user));
 });
 
 export const logout = asyncHandler(async (req, res) => {
-  const { refreshToken } = req.cookies;
+  const { jwtToken } = req.cookies;
   const { id, email } = req.user;
 
-  if (!refreshToken) {
-    throw new CustomError(
-      ResponseStatus.BadRequest,
-      "Authentication token not found. Please log in again."
-    );
-  }
-
-  const hashedToken = createHash(refreshToken);
-
-  const result = await db
-    .update(users)
-    .set({ refreshToken: null })
-    .where(eq(users.refreshToken, hashedToken));
-
-  if (!result.rowCount) {
-    throw new CustomError(
-      ResponseStatus.BadRequest,
-      "Invalid or expired session. Please log in again."
-    );
+  if (!jwtToken) {
+    throw new CustomError(ResponseStatus.BadRequest, "JWT not found");
   }
 
   logger.info("User logged out", { email, userId: id, ip: req.ip });
 
   res
     .status(ResponseStatus.Success)
-    .clearCookie("accessToken", accessTokenOptions)
-    .clearCookie("refreshToken", refreshTokenOptions)
+    .clearCookie("jwtToken", {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "lax" as const,
+      maxAge: ms(env.JWT_EXPIRY as StringValue),
+    })
     .json(
       new ApiResponse(ResponseStatus.Success, "Logged out successfully", null)
     );
@@ -191,36 +112,4 @@ export const getProfile = asyncHandler(async (req, res) => {
         user
       )
     );
-});
-
-export const uploadAvatar = asyncHandler(async (req, res) => {
-  const { email } = req.user;
-
-  let avatarUrl;
-  if (req.file) {
-    try {
-      const uploaded = await uploadOnCloudinary(req.file.path);
-      avatarUrl = uploaded?.secure_url;
-
-      await db
-        .update(users)
-        .set({ avatar: avatarUrl })
-        .where(eq(users.email, email));
-
-      logger.info("Avatar uploaded successfully", { email, avatarUrl });
-      res
-        .status(ResponseStatus.Success)
-        .json(
-          new ApiResponse(
-            ResponseStatus.Success,
-            "Avatar uploaded successfully",
-            { avatarUrl }
-          )
-        );
-    } catch (err: any) {
-      logger.warn(`Avatar upload failed for ${email} due to ${err.message}`);
-    }
-  } else {
-    throw new CustomError(ResponseStatus.BadRequest, "No image uploaded");
-  }
 });

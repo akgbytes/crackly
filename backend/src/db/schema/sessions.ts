@@ -10,7 +10,6 @@ export const sessions = pgTable(
     role: text("role").notNull(),
     experience: integer("experience").notNull(),
     importantTopics: text("important_topics").notNull(),
-    description: text("description"),
     ...timestamps,
   },
   (table) => [uniqueIndex("uniqueRolePerUser").on(table.userId, table.role)]

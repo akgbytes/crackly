@@ -3,6 +3,7 @@ import { LuChevronDown, LuPin, LuPinOff, LuSparkles } from "react-icons/lu";
 import AIResponsePreview from "./AIResponsePreview";
 
 interface QuestionCardProps {
+  index: number;
   question: string;
   answer: string;
   onLearnMore: () => void;
@@ -11,6 +12,7 @@ interface QuestionCardProps {
 }
 
 const QuestionCard: React.FC<QuestionCardProps> = ({
+  index,
   question,
   answer,
   onLearnMore,
@@ -36,8 +38,8 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
     <div className="bg-white rounded-lg mb-4 overflow-hidden py-4 px-5 shadow-xl shadow-gray-100/70 border border-gray-100/60 group transition-all">
       <div className="flex items-start justify-between cursor-pointer">
         <div className="flex items-start gap-3.5">
-          <span className="text-xs md:text-sm font-semibold text-gray-400 leading-[18px]">
-            Q
+          <span className="text-sm md:text-base font-medium text-gray-800">
+            {`Q${index + 1}.`}
           </span>
           <h3
             className="text-sm md:text-base font-medium text-gray-800 mr-0 md:mr-20"

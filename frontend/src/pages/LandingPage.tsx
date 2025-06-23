@@ -4,6 +4,8 @@ import FeatureCard from "../components/FeatureCard";
 import { useAppContext } from "../hooks/useAppContext";
 import Footer from "../components/Footer";
 import { FEATURES } from "../constants/features";
+import { Badge } from "../components/ui/badge";
+import { Navbar } from "../components/Navbar";
 
 const LandingPage = () => {
   const { navigate, user } = useAppContext();
@@ -17,9 +19,10 @@ const LandingPage = () => {
   };
   return (
     <>
+      <Navbar />
       <div className="grainy">
         <div className="mb-12 mt-28 sm:mt-40 flex flex-col items-center justify-center text-center h-full mx-auto w-full max-w-screen-xl px-2.5 md:px-20">
-          <div className="mx-auto mb-4 flex max-w-fit items-center justify-center space-x-2 overflow-hidden rounded-full border border-gray-200 bg-white px-7 py-2 shadow-md backdrop-blur transition-all hover:border-gray-300 hover:bg-white/50">
+          <div className="mx-auto mb-4 flex max-w-fit items-center justify-center space-x-2 overflow-hidden rounded-full border border-gray-200 bg-zinc-50/60 px-7 py-2 shadow-md backdrop-blur transition-all hover:border-gray-300 hover:bg-white/50">
             <Sparkles size={16} className="text-primary" />
             <p className="text-sm font-semibold text-zinc-800">AI Powered</p>
           </div>
@@ -62,18 +65,82 @@ const LandingPage = () => {
         </div>
 
         {/* Feature section */}
-        <div className="mx-auto mb-32 mt-32 max-w-5xl sm:mt-56">
-          <div className="mb-12 px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl sm:text-center">
-              <h2 className="mt-2 font-bold text-4xl text-gray-900 sm:text-5xl">
-                Your Smarter Way to{" "}
-                <span className="text-primary">Interview</span>
-              </h2>
-            </div>
+        <section
+          id="features"
+          className="flex flex-col items-center container mt-32 mx-auto px-6 py-20"
+        >
+          <div className="text-center mb-8">
+            <Badge className="mb-4 bg-rose-100 text-rose-700 font-semibold">
+              Why Choose PrepGenie
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Everything You Need to Succeed
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
+              Our AI-powered platform adapts to your specific needs and gives
+              you the edge in any interview
+            </p>
           </div>
 
-          <FeatureCard features={FEATURES} />
-        </div>
+          <div className="">
+            <FeatureCard features={FEATURES} />
+          </div>
+        </section>
+
+        {/* How It Works Section */}
+        <section
+          id="how-it-works"
+          className="container mt-8 mx-auto px-6 py-8 mb-8"
+        >
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16">
+              <Badge className="mb-4 bg-green-100 text-green-700">
+                How It Works
+              </Badge>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                Simple. Smart. Effective.
+              </h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                Get started with your interview prep in just three easy steps
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              <div className="text-center">
+                <div className="bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                  1
+                </div>
+                <h3 className="text-2xl font-bold mb-4">Set Your Profile</h3>
+                <p className="text-gray-600">
+                  Tell us about your target role, experience level, and the
+                  topics you want to focus on
+                </p>
+              </div>
+
+              <div className="text-center">
+                <div className="bg-purple-600 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                  2
+                </div>
+                <h3 className="text-2xl font-bold mb-4">Get AI Questions</h3>
+                <p className="text-gray-600">
+                  Our AI generates personalized interview questions based on
+                  your profile and preferences
+                </p>
+              </div>
+
+              <div className="text-center">
+                <div className="bg-green-600 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                  3
+                </div>
+                <h3 className="text-2xl font-bold mb-4">Practice & Learn</h3>
+                <p className="text-gray-600">
+                  Practice with detailed answers and deep-dive explanations to
+                  master each concept
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
       <Footer />

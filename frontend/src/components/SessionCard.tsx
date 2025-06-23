@@ -1,94 +1,106 @@
 import React from "react";
 import { LuTrash2 } from "react-icons/lu";
-import { getInitials } from "../lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { BookOpen, Clock, Play, Target, FileText } from "lucide-react";
 
 interface SessionCardProps {
-  colors: {
-    bgcolor: string;
+  session: {
+    id: string;
+    role: string;
+    experience: number;
+    importantTopics: string;
+    createdAt: string;
+    questionsCount: number;
+    onSelect: () => void;
+    onDelete: () => void;
   };
-  role: string;
-  importantTopics: string;
-  experience: number;
-  questions: number;
-  description?: string;
-  lastUpdated: string;
-  onSelect: () => void;
-  onDelete: () => void;
 }
 
-const SessionCard: React.FC<SessionCardProps> = ({
-  colors,
-  role,
-  importantTopics,
-  experience,
-  questions,
-  description,
-  lastUpdated,
-  onSelect,
-  onDelete,
-}) => {
+const SessionCard: React.FC<SessionCardProps> = ({ session }) => {
   return (
-    <div
-      className="bg-white border border-gray-300/40 rounded-xl p-2 overflow-hidden cursor-pointer hover:shadow-xl shadow-gray-100 relative group"
-      onClick={onSelect}
-    >
-      <div
-        className="rounded-lg p-4 cursor-pointer relative"
-        style={{ background: colors.bgcolor }}
-      >
-        <div className="flex items-start">
-          <div className="shrink-0 w-12 h-12 bg-white rounded-md flex items-center justify-center mr-4">
-            <span className="text-lg font-semibold text-black">
-              {getInitials(role)}
+    <Card className="group hover:shadow-lg transition-all duration-300  bg-white">
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between">
+          <div className="space-y-2">
+            <CardTitle className="text-lg font-semibold text-gray-900 group-hover:text-pink-600 transition-colors">
+              {session.role}
+            </CardTitle>
+          </div>
+
+          <Button
+            className="text-xs text-rose-500 font-medium bg-transparent cursor-pointer px-3 py-1 border-none hover:border-rose-200 hover:bg-transparent"
+            onClick={(e) => {
+              e.stopPropagation();
+              session.onDelete();
+            }}
+          >
+            <LuTrash2 />
+          </Button>
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-4 -mt-8">
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="flex items-center gap-2 text-gray-600">
+            <Target className="h-4 w-4 text-pink-500" />
+            <span>
+              {session.experience} {session.experience <= 1 ? "year" : "years"}{" "}
+              exp.
             </span>
           </div>
-
-          <div className="grow">
-            <div className="flex justify-between items-start">
-              <div>
-                <h2 className="text-[17px] font-medium">{role}</h2>
-                <p className="text-xs font-medium text-gray-900">
-                  {importantTopics}
-                </p>
-              </div>
-            </div>
+          <div className="flex items-center gap-2 text-gray-600">
+            <Clock className="h-4 w-4 text-pink-500" />
+            <span>
+              {new Date(session.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })}
+            </span>
           </div>
         </div>
 
-        <button
-          type="button"
-          className="hidden group-hover:flex items-center gap-2 text-xs text-rose-500 font-medium bg-rose-50 px-3 py-1 rounded border border-rose-100 hover:border-rose-200 absolute top-2 right-2"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete();
-          }}
-        >
-          <LuTrash2 />
-        </button>
-      </div>
-
-      <div className="px-3 pb-3">
-        <div className="flex items-center gap-3 mt-4 flex-wrap">
-          <span className="text-[10px] font-medium text-black px-3 py-1 border border-gray-900 rounded-full">
-            Experience: {experience} {experience === 1 ? "Year" : "Years"}
-          </span>
-
-          <span className="text-[10px] font-medium text-black px-3 py-1 border border-gray-900 rounded-full">
-            {questions} Q&A
-          </span>
-
-          <span className="text-[10px] font-medium text-black px-3 py-1 border border-gray-900 rounded-full">
-            Last Updated: {lastUpdated}
-          </span>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <BookOpen className="h-4 w-4 text-pink-500" />
+            <span className="font-medium">Focus Topics:</span>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {session.importantTopics
+              .split(",")
+              .slice(0, 3)
+              .map((topic, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-pink-50 text-pink-700 border border-pink-200"
+                >
+                  {topic.trim()}
+                </span>
+              ))}
+            {session.importantTopics.split(",").length > 3 && (
+              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gray-50 text-gray-600 border border-gray-200">
+                +{session.importantTopics.split(",").length - 3} more
+              </span>
+            )}
+          </div>
         </div>
 
-        {description && (
-          <p className="text-[12px] text-gray-700 font-medium line-clamp-1 mt-3">
-            {description}
-          </p>
-        )}
-      </div>
-    </div>
+        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+          <div className="text-sm text-gray-500">
+            {session.questionsCount || 0} questions prepared
+          </div>
+          <Button
+            size="sm"
+            className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2"
+            onClick={session.onSelect}
+          >
+            <Play className="h-4 w-4 mr-1.5" />
+            View Session
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

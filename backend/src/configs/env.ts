@@ -24,30 +24,22 @@ const nonEmptyString = (name: string) =>
 const envSchema = z.object({
   PORT: z.preprocess(
     (val) => Number(val),
-    z
-      .number({
-        required_error: `PORT is required`,
-        invalid_type_error: `PORT must be a number`,
-      })
-      .int(`PORT must be an integer`)
-      .positive(`PORT must be a positive number`)
+    z.number({
+      required_error: `PORT is required`,
+      invalid_type_error: `PORT must be a number`,
+    })
   ),
 
   DATABASE_URL: validURL("DATABASE_URL"),
 
-  ACCESS_TOKEN_SECRET: nonEmptyString("ACCESS_TOKEN_SECRET"),
-  ACCESS_TOKEN_EXPIRY: nonEmptyString("ACCESS_TOKEN_EXPIRY"),
-  REFRESH_TOKEN_SECRET: nonEmptyString("REFRESH_TOKEN_SECRET"),
-  REFRESH_TOKEN_EXPIRY: nonEmptyString("REFRESH_TOKEN_EXPIRY"),
-
-  CLOUDINARY_NAME: nonEmptyString("CLOUDINARY_NAME"),
-  CLOUDINARY_API_KEY: nonEmptyString("CLOUDINARY_API_KEY"),
-  CLOUDINARY_SECRET_KEY: nonEmptyString("CLOUDINARY_SECRET_KEY"),
+  JWT_SECRET: nonEmptyString("JWT_SECRET"),
+  JWT_EXPIRY: nonEmptyString("KWT_EXPIRY"),
 
   SERVER_URL: validURL("SERVER_URL"),
   CLIENT_URL: validURL("CLIENT_URL"),
 
   GEMINI_API_KEY: nonEmptyString("GEMINI_API_KEY"),
+  GOOGLE_CLIENT_ID: nonEmptyString("GOOGLE_CLIENT_ID"),
 
   NODE_ENV: z.nativeEnum(NodeEnv, {
     errorMap: () => {
@@ -60,6 +52,7 @@ const createEnv = (env: NodeJS.ProcessEnv) => {
   const result = envSchema.safeParse(env);
 
   if (!result.success) {
+    console.log("ressult error: ", result.error);
     const messages = result.error.errors
       .map((err) => `- ${err.message}`)
       .join("\n");

@@ -7,6 +7,6 @@ const PORT = env.PORT;
 
 connectDrizzle();
 
-app.listen(PORT, () => {
+app.listen(8080, () => {
   logger.info(`Server running on port ${PORT}`);
 });

@@ -20,7 +20,6 @@ interface SessionForm {
   role: string;
   experience: number;
   importantTopics: string;
-  description: string;
 }
 
 interface CreateSessionDialogProps {
@@ -112,18 +111,6 @@ const CreateSessionDialog = ({
                   required: "Topics are required",
                 })}
                 error={errors.importantTopics?.message}
-              />
-            </div>
-
-            {/* Description */}
-            <div className="flex flex-col space-y-1.5">
-              <Input
-                label="Description"
-                placeholder="Any specific notes..."
-                {...register("description", {
-                  required: "Description is required",
-                })}
-                error={errors.description?.message}
               />
             </div>
           </div>

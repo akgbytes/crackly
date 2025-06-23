@@ -7,7 +7,6 @@ export const createSessionSchema = z.object({
     .min(0, { message: "Experience must be at least 0 years" })
     .max(50, { message: "Experience cannot exceed 50 years" }),
   importantTopics: z.string().nonempty("Important topics are required"),
-  description: z.string().optional(),
   numberOfQuestions: z.number(),
 });
 

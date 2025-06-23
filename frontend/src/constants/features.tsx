@@ -1,9 +1,10 @@
 import {
   Brain,
-  BookOpenCheck,
+  CheckCircle,
   FileQuestion,
   NotebookPen,
   SquareMousePointer,
+  Target,
 } from "lucide-react";
 
 export type Feature = {
@@ -19,27 +20,28 @@ export const FEATURES: Feature[] = [
     title: "Smart Questions, Just for You",
     description:
       "No more one-size-fits-all. Get tailored interview questions based on your role, experience, and focus areas — like having a personal coach by your side.",
-    icon: <FileQuestion className="w-6 h-6 text-blue-600 bg-transparent" />,
+    icon: <Target className="size-6 text-blue-600" />,
   },
   {
     id: "2",
-    title: "Click to Dive Deeper",
-    description:
-      "Review at your pace. Expand answers when you’re ready, and instantly explore deeper concepts with AI-powered explanations designed to reinforce your understanding.",
-    icon: <SquareMousePointer className="w-6 h-6 text-indigo-600" />,
-  },
-  {
-    id: "3",
     title: "Understand the Why Behind Answers",
     description:
       "Don’t just memorize — master. Get clear, AI-generated explanations that break down the reasoning behind each answer so you truly understand the logic.",
     icon: <Brain className="w-6 h-6 text-rose-600" />,
   },
   {
+    id: "3",
+    title: "Topic Customization",
+    description:
+      "Focus on specific topics and technologies relevant to your target role and company.",
+    icon: <CheckCircle className="size-6 text-green-600" />,
+  },
+
+  {
     id: "4",
     title: "Customize Your Prep Journey",
     description:
-      "Pin important questions, add personal notes, and organize your prep your way. Stay focused and make every session more effective and personalized.",
+      "Pin important questions and organize your prep your way. Stay focused and make every session more effective and personalized.",
     icon: <NotebookPen className="w-6 h-6 text-teal-600" />,
   },
 ];

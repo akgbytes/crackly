@@ -25,7 +25,6 @@ export const generateCompleteSession = asyncHandler(async (req, res) => {
     role,
     experience,
     importantTopics,
-    description,
     numberOfQuestions = 10,
   } = handleZodError(validateSession(req.body));
 
@@ -45,7 +44,6 @@ export const generateCompleteSession = asyncHandler(async (req, res) => {
           role,
           experience,
           importantTopics,
-          description,
         })
         .returning();
 
@@ -209,9 +207,11 @@ export const getSessionsWithQuestionCount = asyncHandler(async (req, res) => {
       role: sessions.role,
       importantTopics: sessions.importantTopics,
       experience: sessions.experience,
-      description: sessions.description,
-      lastUpdated: sessions.updatedAt,
-      questionCount: db.$count(questions, eq(questions.sessionId, sessions.id)),
+      createdAt: sessions.createdAt,
+      questionsCount: db.$count(
+        questions,
+        eq(questions.sessionId, sessions.id)
+      ),
     })
     .from(sessions)
     .where(eq(sessions.userId, userId));
