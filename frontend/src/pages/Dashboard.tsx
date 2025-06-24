@@ -86,7 +86,7 @@ const Dashboard = () => {
           </div>
 
           <CreateSessionDialog onSuccess={fetchAllSession}>
-            <Button className="bg-pink-600 hover:bg-pink-700">
+            <Button className="mt-5 cursor-pointer">
               <Plus className="w-4 h-4 mr-2" />
               Add Session
             </Button>

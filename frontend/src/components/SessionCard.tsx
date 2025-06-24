@@ -2,7 +2,7 @@ import React from "react";
 import { LuTrash2 } from "react-icons/lu";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { BookOpen, Clock, Play, Target, FileText } from "lucide-react";
+import { BookOpen, Clock, Play, Target } from "lucide-react";
 
 interface SessionCardProps {
   session: {

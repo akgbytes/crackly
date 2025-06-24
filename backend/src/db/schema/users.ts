@@ -6,7 +6,9 @@ export const users = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
-  avatar: text("avatar").default("https://avatar.iran.liara.run/public/48"),
+  avatar: text("avatar").default(
+    "https://res.cloudinary.com/dmnh10etf/image/upload/v1750270944/default_epnleu.png"
+  ),
 
   ...timestamps,
 });

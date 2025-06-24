@@ -1,12 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
-
 import Dashboard from "./pages/Dashboard";
-
-// import { Navbar } from "./components/Navbar";
 import NotFound from "./pages/NotFound";
 import PrepSession from "./pages/PrepSession";
 import ProtectedRoutes from "./pages/ProtectedRoutes";
@@ -28,19 +24,18 @@ const App = () => {
     fetchUser();
   }, []);
   return (
-    <div className="min-h-[calc(100vh-1px)] flex flex-col antialiased">
-      <main className="relative flex-1 flex flex-col">
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route element={<ProtectedRoutes />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/prep-session/:sessionId" element={<PrepSession />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <ToastContainer position="top-right" autoClose={2000} />
-      </main>
+    <div className="min-h-screen w-full bg-[#fff9f5] relative">
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/prep-session/:sessionId" element={<PrepSession />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+
+      <ToastContainer position="top-right" autoClose={2000} />
     </div>
   );
 };

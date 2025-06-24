@@ -28,7 +28,7 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="sticky z-[100] h-16 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/80 backdrop-blur-lg transition-all">
+    <nav className="sticky z-[100] h-16 inset-x-0 top-0 w-full border-b border-gray-200 backdrop-blur-lg transition-all">
       <div className="flex h-16 items-center justify-between mx-auto w-full max-w-screen-xl px-2.5 md:px-20">
         <a href="/" className="flex z-40 font-semibold text-xl">
           <div className="flex gap-2 items-center">
