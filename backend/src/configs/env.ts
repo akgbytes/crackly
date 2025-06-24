@@ -52,7 +52,6 @@ const createEnv = (env: NodeJS.ProcessEnv) => {
   const result = envSchema.safeParse(env);
 
   if (!result.success) {
-    console.log("ressult error: ", result.error);
     const messages = result.error.errors
       .map((err) => `- ${err.message}`)
       .join("\n");

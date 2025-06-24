@@ -12,14 +12,10 @@ import { env } from "../configs/env";
 import ms, { StringValue } from "ms";
 
 export const googleLogin = asyncHandler(async (req, res) => {
-  console.log("data in body: ", req.body);
   const { token } = req.body;
   const payload = await verifyGoogleToken(token);
 
-  console.log("payload: ", payload);
-
   const { email, name, picture } = payload;
-
   if (!email || !name || !picture) {
     throw new CustomError(200, "");
   }

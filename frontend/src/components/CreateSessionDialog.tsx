@@ -53,13 +53,10 @@ const CreateSessionDialog = ({
         { withCredentials: true }
       );
 
-      console.log("session response: ", response.data);
       reset();
       setShowDialog(false);
       onSuccess();
-    } catch (error: any) {
-      console.log("session error response: ", error);
-    }
+    } catch (error: any) {}
   };
 
   return (

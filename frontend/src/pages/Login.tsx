@@ -36,7 +36,7 @@ const Login = () => {
             onSuccess={async (credentialResponse) => {
               setLoading(true);
               try {
-                const response = await axios.post(
+                await axios.post(
                   `${SERVER_URL}/api/v1/auth/login`,
                   { token: credentialResponse.credential },
                   {
@@ -44,21 +44,16 @@ const Login = () => {
                   }
                 );
 
-                console.log("login response: ", response.data);
-
                 const userProfile = await axios.get(
                   `${SERVER_URL}/api/v1/auth/me`,
                   { withCredentials: true }
                 );
 
-                console.log("user profile: ", userProfile);
                 setUser(userProfile.data.data);
 
                 toast.success("Logged in successfully");
                 navigate("/dashboard");
               } catch (error: any) {
-                console.log("login error: ", error.response.data);
-
                 toast.error(error.response?.data?.message || "Login failed");
               } finally {
                 setLoading(false);

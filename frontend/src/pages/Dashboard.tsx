@@ -38,9 +38,7 @@ const Dashboard = () => {
         { withCredentials: true }
       );
       setSessions(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const deleteSession = async (session: Session | null) => {

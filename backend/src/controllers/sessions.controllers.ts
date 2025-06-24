@@ -82,7 +82,6 @@ export const generateCompleteSession = asyncHandler(async (req, res) => {
         )
       );
   } catch (error) {
-    console.error("Error in generateCompleteSession:", error);
     throw new CustomError(
       ResponseStatus.InternalServerError,
       "Failed to create session and questions"
@@ -91,8 +90,6 @@ export const generateCompleteSession = asyncHandler(async (req, res) => {
 });
 
 export const generateMoreQuestions = asyncHandler(async (req, res) => {
-  console.log("questions received: ", req.body);
-  console.log("session received: ", req.params);
   const userId = req.user.id;
   const { sessionId } = req.params;
   const { questions: questionList } = req.body;
@@ -123,9 +120,6 @@ export const generateMoreQuestions = asyncHandler(async (req, res) => {
       );
   }
 
-  console.log("session from db: ", session);
-
-  console.log("hehehehhehehhe sess", sessionId);
   const generatedQuestions = await generateMoreAIQuestions({
     role: session.role,
     experience: session.experience,
@@ -134,8 +128,6 @@ export const generateMoreQuestions = asyncHandler(async (req, res) => {
     questions: questionList,
   });
 
-  console.log("error fffffkkkkkk");
-
   const questionData = generatedQuestions.map(({ question, answer }) => ({
     sessionId: session.id,
     userId,
@@ -143,14 +135,10 @@ export const generateMoreQuestions = asyncHandler(async (req, res) => {
     answer,
   }));
 
-  console.log("yhaa hu");
-
   const insertedQuestions = await db
     .insert(questions)
     .values(questionData)
     .returning();
-
-  console.log("nhi bc idhr hu");
 
   res
     .status(ResponseStatus.Created)

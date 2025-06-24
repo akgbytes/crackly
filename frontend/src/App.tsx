@@ -18,7 +18,6 @@ const App = () => {
         withCredentials: true,
       });
 
-      console.log("user profile: ", userProfile);
       setUser(userProfile.data.data);
     }
     fetchUser();

@@ -10,9 +10,7 @@ export const isLoggedIn = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("cookies: ", req.cookies);
   const { jwtToken } = req.cookies;
-  console.log("jwt: ", jwtToken);
 
   if (!jwtToken)
     throw new CustomError(ResponseStatus.Unauthorized, "JWT token is missing");

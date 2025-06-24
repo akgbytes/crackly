@@ -63,12 +63,8 @@ const PrepSession2 = () => {
         { withCredentials: true }
       );
 
-      console.log("session questions fetch response: ", response.data.data);
-
       setSessionData(response.data.data);
-    } catch (error) {
-      console.error("Error fetching session questions:", error);
-    }
+    } catch (error) {}
   };
 
   const generateConceptExplanation = async (question: string, id: string) => {
@@ -84,15 +80,12 @@ const PrepSession2 = () => {
         { withCredentials: true }
       );
 
-      console.log("explanation response: ", response.data);
-
       if (response.data) {
         setExplanation(response.data.data);
       }
     } catch (error) {
       setExplanation(null);
       setError("Failed to generate explanation. Try again later.");
-      console.error("Explanation Error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -106,12 +99,9 @@ const PrepSession2 = () => {
         { withCredentials: true }
       );
 
-      console.log("toggle response: ", response.data);
       toast.success("Question Pinned Successfully");
       fetchSessionDetailsById();
-    } catch (error) {
-      console.error("Pin toggle error:", error);
-    }
+    } catch (error) {}
   };
 
   const uploadMoreQuestions = async () => {
@@ -128,10 +118,8 @@ const PrepSession2 = () => {
         { withCredentials: true }
       );
 
-      console.log("load more questions response: ", response.data);
       fetchSessionDetailsById();
     } catch (error: any) {
-      console.log("load more questions error: ", error.response.data.message);
       setError(error.response.data.message);
     } finally {
       setIsUpdateLoader(false);
@@ -145,18 +133,8 @@ const PrepSession2 = () => {
   if (!sessionData) {
     return (
       // mx-auto w-full max-w-screen-xl px-2.5 md:px-20
-      <div className="mx-auto w-full max-w-screen-xl px-2.5 md:px-20 flex items-center justify-center">
-        <Card className="max-w-md mx-auto">
-          <CardContent className="p-6 text-center">
-            <h3 className="text-lg font-semibold mb-2">Session not found</h3>
-            <p className="text-gray-600 mb-4">
-              The session you're looking for doesn't exist.
-            </p>
-            <Button onClick={() => navigate("/dashboard")}>
-              Back to Dashboard
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen flex items-center justify-center">
+        <div>Loading...</div>
       </div>
     );
   }

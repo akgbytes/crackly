@@ -90,8 +90,6 @@ export const generateMoreAIQuestions = async (
     .map((ques, index) => `Q${index + 1}. ${ques}`)
     .join("\n");
 
-  console.log("formattedQUs", formattedQuestions);
-
   const prompt = generateMoreQuestionsPrompt(
     data.role,
     data.experience,
@@ -100,11 +98,7 @@ export const generateMoreAIQuestions = async (
     formattedQuestions
   );
 
-  console.log("prompt generated: ", prompt);
-
   const rawText = await getAIResponse(prompt);
-
-  console.log("response from ai: ", rawText);
 
   try {
     const cleaned = cleanJson(rawText);
