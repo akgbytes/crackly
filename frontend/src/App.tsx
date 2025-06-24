@@ -11,14 +11,19 @@ import axios from "axios";
 import { useAppContext } from "./hooks/useAppContext";
 
 const App = () => {
-  const { SERVER_URL, setUser } = useAppContext();
+  const { SERVER_URL, setUser, setLoading } = useAppContext();
   useEffect(() => {
     async function fetchUser() {
-      const userProfile = await axios.get(`${SERVER_URL}/api/v1/auth/me`, {
-        withCredentials: true,
-      });
-
-      setUser(userProfile.data.data);
+      try {
+        const res = await axios.get(`${SERVER_URL}/api/v1/auth/me`, {
+          withCredentials: true,
+        });
+        setUser(res.data.data);
+      } catch (error: any) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchUser();
   }, []);

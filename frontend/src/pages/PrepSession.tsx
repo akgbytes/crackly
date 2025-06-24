@@ -1,21 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppContext } from "../hooks/useAppContext";
-
 import { AnimatePresence, motion } from "framer-motion";
-import { LuCircleAlert, LuListCollapse } from "react-icons/lu";
+import { LuCircleAlert } from "react-icons/lu";
 import AIResponsePreview from "../components/AIResponsePreview";
 import SkeletonLoader from "../components/SkeletonLoader";
 import axios from "axios";
 import RoleInfo from "../components/RoleInfo";
 import QuestionCard from "../components/QuestionCard";
-
 import Drawer from "../components/Drawer";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
-import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { ArrowLeft, MoreHorizontal, RefreshCcw } from "lucide-react";
+import { ArrowLeft, RefreshCcw } from "lucide-react";
 
 type Session = {
   createdAt: string;
@@ -93,7 +90,7 @@ const PrepSession2 = () => {
 
   const toggleQuestionPinStatus = async (questionId: string) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${SERVER_URL}/api/v1/sessions/${sessionData?.session.id}/question/${questionId}/pin`,
         {},
         { withCredentials: true }
@@ -110,13 +107,15 @@ const PrepSession2 = () => {
     );
     try {
       setIsUpdateLoader(true);
-      const response = await axios.post(
+      await axios.post(
         `${SERVER_URL}/api/v1/sessions/${sessionData?.session.id}/generate/more`,
         {
           questions: previousQuestions,
         },
         { withCredentials: true }
       );
+
+      toast.success("More questions loaded successfully");
 
       fetchSessionDetailsById();
     } catch (error: any) {
@@ -132,7 +131,6 @@ const PrepSession2 = () => {
 
   if (!sessionData) {
     return (
-      // mx-auto w-full max-w-screen-xl px-2.5 md:px-20
       <div className="min-h-screen flex items-center justify-center">
         <div>Loading...</div>
       </div>
@@ -146,7 +144,7 @@ const PrepSession2 = () => {
           <Button
             variant="ghost"
             onClick={() => navigate("/dashboard")}
-            className="mb-4"
+            className="mb-4 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard

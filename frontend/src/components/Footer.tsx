@@ -7,7 +7,9 @@ const Footer = () => {
       <div>
         Made with <Heart className="inline" fill="red" color="#ffffff" /> by{" "}
         <span className="underline cursor-pointer hover:text-red-400">
-          akgbytes
+          <a href="https://github.com/akgbytes" target="_blank">
+            akgbytes
+          </a>
         </span>
       </div>
     </footer>

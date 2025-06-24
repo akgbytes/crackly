@@ -15,8 +15,8 @@ const Login = () => {
   const { navigate, SERVER_URL, setUser, setLoading } = useAppContext();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 px-4">
-      <Card className="w-full max-w-md relative z-10 shadow-2xl border-0 bg-white/80 backdrop-blur-lg">
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <Card className="w-full max-w-md relative z-10 shadow-2xl border-0 bg-[#fef9f7] backdrop-blur-lg">
         <CardHeader className="">
           <div className="text-center space-y-2">
             <CardTitle className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
@@ -30,7 +30,7 @@ const Login = () => {
 
         <CardContent className="px-8 pb-8">
           <GoogleLogin
-            theme="outline"
+            theme="filled_blue"
             text="continue_with"
             size="large"
             onSuccess={async (credentialResponse) => {
