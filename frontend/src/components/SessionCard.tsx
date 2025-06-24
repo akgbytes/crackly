@@ -19,7 +19,7 @@ interface SessionCardProps {
 
 const SessionCard: React.FC<SessionCardProps> = ({ session }) => {
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300  bg-white">
+    <Card className="group hover:shadow-lg transition-all duration-300  bg-[#fef9f7]">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="space-y-2">
@@ -92,7 +92,7 @@ const SessionCard: React.FC<SessionCardProps> = ({ session }) => {
           </div>
           <Button
             size="sm"
-            className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2"
+            className="bg-primary hover:bg-rose-600 text-white px-4 py-2 cursor-pointer"
             onClick={session.onSelect}
           >
             <Play className="h-4 w-4 mr-1.5" />
