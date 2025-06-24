@@ -44,7 +44,7 @@ const CreateSessionDialog = ({
 
   const onSubmit = async (data: SessionForm) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${SERVER_URL}/api/v1/sessions/generate`,
         {
           ...data,
