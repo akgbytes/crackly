@@ -1,11 +1,4 @@
-import {
-  Brain,
-  CheckCircle,
-  FileQuestion,
-  NotebookPen,
-  SquareMousePointer,
-  Target,
-} from "lucide-react";
+import { Brain, CheckCircle, NotebookPen, Target } from "lucide-react";
 
 export type Feature = {
   id: string;
