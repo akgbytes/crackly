@@ -35,8 +35,8 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
     setIsExpanded((prev) => !prev);
   };
   return (
-    <div className="bg-white rounded-lg mb-4 overflow-hidden py-4 px-5 shadow-xl shadow-gray-100/70 border border-gray-100/60 group transition-all">
-      <div className="flex items-start justify-between cursor-pointer">
+    <div className="bg-[#fef9f7] rounded-lg mb-4 overflow-hidden py-4 px-5 shadow-xl shadow-gray-100/70 border border-gray-100/60 group transition-all">
+      <div className="flex items-start justify-between">
         <div className="flex items-start gap-3.5">
           <span className="text-sm md:text-base font-medium text-gray-800">
             {`Q${index + 1}.`}
@@ -56,7 +56,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             }`}
           >
             <button
-              className="flex items-center gap-2 text-xs text-indigo-800 font-medium bg-indigo-50 px-3 py-1 mr-2 rounded border border-indigo-50 hover:border-indigo-200"
+              className="flex items-center gap-2 text-xs text-indigo-800 font-medium bg-indigo-50 px-3 py-1 mr-2 rounded border border-indigo-50 hover:border-indigo-200 cursor-pointer"
               onClick={onTogglePin}
               aria-label="Toggle pin"
             >
@@ -64,7 +64,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             </button>
 
             <button
-              className="flex items-center gap-2 text-xs text-cyan-800 font-medium bg-cyan-50 px-3 py-1 mr-2 rounded border border-cyan-50 hover:border-cyan-200"
+              className="flex items-center gap-2 text-xs text-cyan-800 font-medium bg-cyan-50 px-3 py-1 mr-2 rounded border border-cyan-50 hover:border-cyan-200 cursor-pointer"
               onClick={() => {
                 setIsExpanded(true);
                 onLearnMore();
@@ -77,7 +77,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           </div>
 
           <button
-            className="text-gray-400 hover:text-gray-500"
+            className="text-gray-400 hover:text-gray-500 cursor-pointer"
             onClick={toggleExpand}
             aria-label="Toggle answer"
           >
@@ -97,7 +97,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       >
         <div
           ref={contentRef}
-          className="mt-4 text-gray-700 bg-gray-50 px-5 py-3 rounded-lg"
+          className="mt-4 text-gray-700 bg-rose-50 px-5 py-3 rounded-lg"
         >
           <AIResponsePreview content={answer} />
         </div>

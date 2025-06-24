@@ -9,13 +9,13 @@ import SkeletonLoader from "../components/SkeletonLoader";
 import axios from "axios";
 import RoleInfo from "../components/RoleInfo";
 import QuestionCard from "../components/QuestionCard";
-import moment from "moment";
+
 import Drawer from "../components/Drawer";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MoreHorizontal, RefreshCcw } from "lucide-react";
 
 type Session = {
   createdAt: string;
@@ -144,7 +144,8 @@ const PrepSession2 = () => {
 
   if (!sessionData) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      // mx-auto w-full max-w-screen-xl px-2.5 md:px-20
+      <div className="mx-auto w-full max-w-screen-xl px-2.5 md:px-20 flex items-center justify-center">
         <Card className="max-w-md mx-auto">
           <CardContent className="p-6 text-center">
             <h3 className="text-lg font-semibold mb-2">Session not found</h3>
@@ -161,8 +162,8 @@ const PrepSession2 = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+    <div className="mx-auto w-full max-w-screen-xl px-2.5">
+      <div className="container mx-auto py-8">
         <div className="mb-6">
           <Button
             variant="ghost"
@@ -181,9 +182,9 @@ const PrepSession2 = () => {
           createdAt={sessionData?.session.createdAt}
         />
 
-        <div className="container mx-auto pt-4 pb-4 px-4 md:px-0">
+        <div className="container mx-auto pt-6 px-4 md:px-0">
           <h2 className="text-lg font-semibold text-black">Interview Q & A</h2>
-          <div className="grid grid-cols-12 gap-4 mt-5 mb-10">
+          <div className="grid grid-cols-12 gap-4 mt-2 mb-10">
             <div
               className={`col-span-12 ${
                 openLearnMoreDrawer ? "md:col-span-7" : "md:col-span-8"
@@ -221,18 +222,19 @@ const PrepSession2 = () => {
                       {!isLoading &&
                         sessionData.sessionQuestions?.length === index + 1 && (
                           <div className="flex items-center justify-center mt-5">
-                            <button
-                              className="flex items-center gap-3 text-sm text-black font-medium bg-background px-5 py-2 mr-2 rounded text-nowrap cursor-pointer"
+                            <Button
+                              className="min-w-64 cursor-pointer"
                               disabled={isLoading || isUpdateLoader}
                               onClick={uploadMoreQuestions}
                             >
                               {isUpdateLoader ? (
                                 <Spinner />
                               ) : (
-                                <LuListCollapse className="text-lg" />
+                                // MoreHorizontal, RefreshCcw
+                                <RefreshCcw size={15} />
                               )}
                               {"Load More"}
-                            </button>
+                            </Button>
                           </div>
                         )}
                     </>

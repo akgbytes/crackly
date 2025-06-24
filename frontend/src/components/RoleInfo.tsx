@@ -17,11 +17,8 @@ const RoleInfo: React.FC<RoleInfoProps> = ({
   questions,
   createdAt,
 }) => {
-  const expLabel = `${experience} ${
-    Number(experience) <= 1 ? "year" : "years"
-  }`;
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border">
+    <div className="bg-[#fef9f7] max-w-3xl p-6 rounded-lg shadow-sm border">
       <div className="flex items-start justify-between mb-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
