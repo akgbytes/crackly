@@ -1,3 +1,4 @@
+import { env } from "./configs/env";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -21,7 +22,6 @@ import healthRoute from "./routes/healthCheck.routes";
 import authRoutes from "./routes/auth.routes";
 import sessionRoutes from "./routes/sessions.routes";
 import { errorHandler } from "./middlewares/error.middlewares";
-import { env } from "./configs/env";
 
 app.use("/api/v1/healthCheck", healthRoute);
 app.use("/api/v1/auth", authRoutes);
