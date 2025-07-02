@@ -28,7 +28,7 @@ const Login = () => {
           </div>
         </CardHeader>
 
-        <CardContent className="px-8 pb-8">
+        <CardContent className="px-8 pb-8 flex items-center justify-center">
           <GoogleLogin
             theme="filled_blue"
             text="continue_with"
