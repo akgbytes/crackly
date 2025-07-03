@@ -48,7 +48,7 @@ export const googleLogin = asyncHandler(async (req, res) => {
     .cookie("jwtToken", jwtToken, {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
-      sameSite: "lax" as const,
+      sameSite: "none" as const,
       maxAge: ms(env.JWT_EXPIRY as StringValue),
     })
     .json(new ApiResponse(200, "Google login successful", user));
@@ -69,7 +69,7 @@ export const logout = asyncHandler(async (req, res) => {
     .clearCookie("jwtToken", {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
-      sameSite: "lax" as const,
+      sameSite: "none" as const,
       maxAge: ms(env.JWT_EXPIRY as StringValue),
     })
     .json(
