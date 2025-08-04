@@ -76,7 +76,7 @@ const SignUp = () => {
 
     await authClient.signIn.social({
       provider,
-      callbackURL: `${import.meta.env.VITE_APP_URL}`,
+      callbackURL: `${import.meta.env.VITE_FRONTEND_URL}`,
     });
   };
 

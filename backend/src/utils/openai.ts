@@ -12,7 +12,7 @@ import { handleZodError } from "./handleZodError";
 import {
   validateAIExplanation,
   validateAIQuestions,
-} from "../validations/sessions.validation";
+} from "../validations/interviewSet.validation";
 
 export const openai = new OpenAI({
   apiKey: env.GEMINI_API_KEY,
@@ -21,7 +21,7 @@ export const openai = new OpenAI({
 
 export const getAIResponse = async (prompt: string) => {
   const completion = await openai.chat.completions.create({
-    model: "gemini-2.5-flash-preview-04-17",
+    model: "gemini-2.5-flash",
     messages: [{ role: "user", content: prompt }],
     temperature: 0.7,
   });

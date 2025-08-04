@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createSessionSchema = z.object({
+export const createInterviewSetSchema = z.object({
   role: z.string().nonempty("Role is required"),
   experience: z
     .number({ invalid_type_error: "Experience must be a number" })
@@ -35,19 +35,18 @@ const AIExplanationSchema = z.object({
   explanation: z.string(),
 });
 
-export type CreateSessionData = z.infer<typeof createSessionSchema>;
+export type CreateInterviewSetData = z.infer<typeof createInterviewSetSchema>;
 export type UpdateNoteData = z.infer<typeof updateNoteSchema>;
 export type AIQuestionsData = z.infer<typeof AIQuestionsSchema>;
 export type AIExplanationData = z.infer<typeof AIExplanationSchema>;
 
-export const validateSession = (data: CreateSessionData) =>
-  createSessionSchema.safeParse(data);
+export const validateSession = (data: unknown) =>
+  createInterviewSetSchema.safeParse(data);
 
-export const validateNote = (data: UpdateNoteData) =>
-  updateNoteSchema.safeParse(data);
+export const validateNote = (data: unknown) => updateNoteSchema.safeParse(data);
 
-export const validateAIQuestions = (data: AIQuestionsData) =>
+export const validateAIQuestions = (data: unknown) =>
   AIQuestionsSchema.safeParse(data);
 
-export const validateAIExplanation = (data: AIExplanationData) =>
+export const validateAIExplanation = (data: unknown) =>
   AIExplanationSchema.safeParse(data);

@@ -112,6 +112,7 @@
 // export default Dashboard;
 
 import React from "react";
+import { authClient } from "../lib/auth-client";
 
 const Dashboard = () => {
   return <div>Dashboard me hu</div>;

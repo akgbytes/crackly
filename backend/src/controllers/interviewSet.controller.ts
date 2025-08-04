@@ -1,4 +1,3 @@
-import { sessions } from "../db/schema/interviewSet";
 import { and, asc, count, desc, eq } from "drizzle-orm";
 import { db } from "../db";
 import { ApiResponse } from "../utils/ApiResponse";
@@ -9,7 +8,7 @@ import {
   validateGenerateEplanation,
   validateNote,
   validateSession,
-} from "../validations/sessions.validation";
+} from "../validations/interviewSet.validation";
 import { CustomError } from "../utils/CustomError";
 import { questions } from "../db/schema/questions";
 import {
@@ -17,8 +16,9 @@ import {
   generateConceptExplanation,
   generateMoreAIQuestions,
 } from "../utils/openai";
+import { interviewSet } from "../db/schema/interviewSet";
 
-export const generateCompleteSession = asyncHandler(async (req, res) => {
+export const generateCompleteInterviewSet = asyncHandler(async (req, res) => {
   const userId = req.user.id;
 
   const {
@@ -37,8 +37,8 @@ export const generateCompleteSession = asyncHandler(async (req, res) => {
 
   try {
     const result = await db.transaction(async (tx) => {
-      const [session] = await tx
-        .insert(sessions)
+      const [set] = await tx
+        .insert(interviewSet)
         .values({
           userId,
           role,
@@ -47,15 +47,15 @@ export const generateCompleteSession = asyncHandler(async (req, res) => {
         })
         .returning();
 
-      if (!session) {
+      if (!set) {
         throw new CustomError(
           ResponseStatus.InternalServerError,
-          "Failed to create session"
+          "Failed to create interview set"
         );
       }
 
       const questionData = generatedQuestions.map(({ question, answer }) => ({
-        sessionId: session.id,
+        interviewSetId: set.id,
         userId,
         question,
         answer,
@@ -67,7 +67,7 @@ export const generateCompleteSession = asyncHandler(async (req, res) => {
         .returning();
 
       return {
-        session,
+        set,
         questions: insertedQuestions,
       };
     });
@@ -77,36 +77,39 @@ export const generateCompleteSession = asyncHandler(async (req, res) => {
       .json(
         new ApiResponse(
           ResponseStatus.Created,
-          "Session and questions created",
+          "Interview set created successfully",
           result
         )
       );
   } catch (error) {
     throw new CustomError(
       ResponseStatus.InternalServerError,
-      "Failed to create session and questions"
+      "Failed to create interview set"
     );
   }
 });
 
 export const generateMoreQuestions = asyncHandler(async (req, res) => {
   const userId = req.user.id;
-  const { sessionId } = req.params;
+  const { interviewSetId } = req.params;
   const { questions: questionList } = req.body;
-  const [session] = await db
+  const [set] = await db
     .select()
-    .from(sessions)
-    .where(eq(sessions.id, sessionId));
+    .from(interviewSet)
+    .where(eq(interviewSet.id, interviewSetId));
 
-  if (!session) {
-    // throw error
+  if (!set) {
+    throw new CustomError(
+      ResponseStatus.BadRequest,
+      "Invalid interview set id"
+    );
   }
 
-  // counting no of question, if already 30 then return
+  // count no of question, if already 30 then return
   const [existingQuestions] = await db
     .select({ count: count() })
     .from(questions)
-    .where(eq(questions.sessionId, sessionId));
+    .where(eq(questions.interviewSetId, interviewSetId));
 
   if (existingQuestions.count >= 30) {
     return res
@@ -114,22 +117,22 @@ export const generateMoreQuestions = asyncHandler(async (req, res) => {
       .json(
         new ApiResponse(
           ResponseStatus.TooManyRequests,
-          "Question limit reached. You can't generate more than 30 questions per session.",
+          "Question limit reached. You can't generate more than 30 questions per interview set.",
           null
         )
       );
   }
 
   const generatedQuestions = await generateMoreAIQuestions({
-    role: session.role,
-    experience: session.experience,
-    importantTopics: session.importantTopics,
+    role: set.role,
+    experience: set.experience,
+    importantTopics: set.importantTopics,
     numberOfQuestions: 10,
     questions: questionList,
   });
 
   const questionData = generatedQuestions.map(({ question, answer }) => ({
-    sessionId: session.id,
+    interviewSetId: set.id,
     userId,
     question,
     answer,
@@ -151,96 +154,101 @@ export const generateMoreQuestions = asyncHandler(async (req, res) => {
     );
 });
 
-export const deleteSession = asyncHandler(async (req, res) => {
-  const { sessionId } = req.params;
+export const deleteInterviewSet = asyncHandler(async (req, res) => {
+  const { interviewSetId } = req.params;
   const { id } = req.user;
 
-  const [session] = await db
+  const [set] = await db
     .select()
-    .from(sessions)
-    .where(eq(sessions.id, sessionId));
+    .from(interviewSet)
+    .where(eq(interviewSet.id, interviewSetId));
 
-  if (!session) {
-    throw new CustomError(ResponseStatus.NotFound, "Session not found");
-  }
-
-  if (session.userId !== id) {
+  if (!set) {
     throw new CustomError(
-      ResponseStatus.Unauthorized,
-      "Not authorized to delete this session"
+      ResponseStatus.BadRequest,
+      "Invalid interview set id"
     );
   }
 
-  // await db.delete(questions).where(eq(questions.sessionId, sessionId));
+  if (set.userId !== id) {
+    throw new CustomError(
+      ResponseStatus.Unauthorized,
+      "Not authorized to delete this interview session"
+    );
+  }
 
-  await db.delete(sessions).where(eq(sessions.id, sessionId));
+  await db.delete(interviewSet).where(eq(interviewSet.id, interviewSetId));
 
   res
     .status(ResponseStatus.Success)
     .json(
       new ApiResponse(
         ResponseStatus.Success,
-        "Session deleted successfully",
+        "Interview set deleted successfully",
         null
       )
     );
 });
 
-export const getSessionsWithQuestionCount = asyncHandler(async (req, res) => {
+export const getInterviewSetWithQuestionCount = asyncHandler(
+  async (req, res) => {
+    const userId = req.user.id;
+
+    const interviewSetData = await db
+      .select({
+        id: interviewSet.id,
+        role: interviewSet.role,
+        importantTopics: interviewSet.importantTopics,
+        experience: interviewSet.experience,
+        createdAt: interviewSet.createdAt,
+        questionsCount: db.$count(
+          questions,
+          eq(questions.interviewSetId, interviewSet.id)
+        ),
+      })
+      .from(interviewSet)
+      .where(eq(interviewSet.userId, userId));
+
+    res
+      .status(ResponseStatus.Success)
+      .json(
+        new ApiResponse(
+          ResponseStatus.Success,
+          "Interview sets fetched successfully",
+          interviewSetData
+        )
+      );
+  }
+);
+
+export const getQuestionsByInterviewSetId = asyncHandler(async (req, res) => {
   const userId = req.user.id;
+  const interviewSetId = req.params.interviewSetId;
 
-  const sessionsData = await db
-    .select({
-      id: sessions.id,
-      role: sessions.role,
-      importantTopics: sessions.importantTopics,
-      experience: sessions.experience,
-      createdAt: sessions.createdAt,
-      questionsCount: db.$count(
-        questions,
-        eq(questions.sessionId, sessions.id)
-      ),
-    })
-    .from(sessions)
-    .where(eq(sessions.userId, userId));
-
-  res
-    .status(ResponseStatus.Success)
-    .json(
-      new ApiResponse(
-        ResponseStatus.Success,
-        "Sessions fetched successfully",
-        sessionsData
-      )
-    );
-});
-
-export const getQuestionsBySessionId = asyncHandler(async (req, res) => {
-  const userId = req.user.id;
-  const sessionId = req.params.sessionId;
-
-  const [session] = await db
+  const [set] = await db
     .select()
-    .from(sessions)
-    .where(and(eq(sessions.id, sessionId), eq(sessions.userId, userId)));
+    .from(interviewSet)
+    .where(
+      and(eq(interviewSet.id, interviewSetId), eq(interviewSet.userId, userId))
+    );
 
-  if (!session) {
+  if (!set) {
     throw new CustomError(
       ResponseStatus.NotFound,
-      "Invalid session ID or not authorized"
+      "Invalid interview set id or not authorized"
     );
   }
 
-  const sessionQuestions = await db
+  const interviewSetQuestions = await db
     .select()
     .from(questions)
-    .where(eq(questions.sessionId, sessionId))
+    .where(eq(questions.interviewSetId, interviewSetId))
     .orderBy(desc(questions.isPinned), asc(questions.createdAt));
 
   res.status(ResponseStatus.Success).json(
     new ApiResponse(ResponseStatus.Success, "Questions fetched successfully", {
-      session,
-      sessionQuestions,
+      set,
+      interviewSetQuestions,
     })
   );
 });
