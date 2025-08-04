@@ -84,7 +84,7 @@ const InterviewSetCard: React.FC<InterviewSetCardProps> = ({
             onClick={interviewSet.onSelect}
           >
             <Play className="h-4 w-4 mr-1.5" />
-            View interviewSet
+            View interview Set
           </Button>
         </div>
       </CardContent>

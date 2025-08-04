@@ -40,7 +40,7 @@ const HeroSection = () => {
 
           <div className="w-full max-w-80">
             <CustomButton
-              to="/sign-up"
+              to="/dashboard"
               className="relative z-10 h-14 w-full text-base shadow-lg transition-shadow duration-300 hover:shadow-xl"
             >
               Get Started with Crackly
