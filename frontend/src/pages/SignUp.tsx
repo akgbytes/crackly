@@ -114,7 +114,11 @@ const SignUp = () => {
                       <FormItem>
                         <FormLabel>Name</FormLabel>
                         <FormControl>
-                          <Input type="text" placeholder="Jane do" {...field} />
+                          <Input
+                            type="text"
+                            placeholder="John Doe"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -208,7 +212,7 @@ const SignUp = () => {
                     disabled={form.formState.isSubmitting}
                     variant="outline"
                     type="button"
-                    className="w-full"
+                    className="w-full cursor-pointer"
                     onClick={() => onSocial("google")}
                   >
                     <FcGoogle />
@@ -218,7 +222,7 @@ const SignUp = () => {
                     disabled={form.formState.isSubmitting}
                     variant="outline"
                     type="button"
-                    className="w-full"
+                    className="w-full cursor-pointer"
                     onClick={() => onSocial("github")}
                   >
                     <FaGithub />

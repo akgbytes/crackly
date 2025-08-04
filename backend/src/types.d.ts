@@ -1,11 +1,15 @@
-import { User } from "./db/schema";
-
-export type decodedUser = Pick<User, "id" | "email">;
-
 declare global {
   namespace Express {
     interface Request {
-      user: decodedUser;
+      user: {
+        id: string;
+        email: string;
+        emailVerified: boolean;
+        name: string;
+        createdAt: Date;
+        updatedAt: Date;
+        image?: string | null | undefined | undefined;
+      };
     }
   }
 }

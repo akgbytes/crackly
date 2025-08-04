@@ -1,28 +1,24 @@
 import { Request, Response, NextFunction } from "express";
-import { CustomError } from "../utils/CustomError";
-import { ResponseStatus } from "../utils/constants";
-import jwt from "jsonwebtoken";
-import { env } from "../configs/env";
-import { decodedUser } from "../types";
+import { auth } from "../lib/auth";
+import { fromNodeHeaders } from "better-auth/node";
 
 export const isLoggedIn = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { jwtToken } = req.cookies;
-
-  if (!jwtToken)
-    throw new CustomError(ResponseStatus.Unauthorized, "JWT token is missing");
-
   try {
-    const decoded = jwt.verify(jwtToken, env.JWT_SECRET);
-    req.user = decoded as decodedUser;
+    const session = await auth.api.getSession({
+      headers: fromNodeHeaders(req.headers),
+    });
+
+    if (!session || !session.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    req.user = session.user;
     next();
   } catch (error) {
-    throw new CustomError(
-      ResponseStatus.Unauthorized,
-      "Invalid or expired JWT"
-    );
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
