@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useAppContext } from "../hooks/useAppContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { LuCircleAlert } from "react-icons/lu";
 import AIResponsePreview from "../components/AIResponsePreview";
@@ -13,33 +12,6 @@ import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import { Button } from "../components/ui/button";
 import { ArrowLeft, RefreshCcw } from "lucide-react";
-
-type Session = {
-  createdAt: string;
-  updatedAt: string;
-  id: string;
-  userId: string;
-  role: string;
-  experience: number;
-  importantTopics: string;
-};
-
-type Question = {
-  createdAt: string;
-  updatedAt: string;
-  id: string;
-  userId: string;
-  sessionId: string;
-  question: string;
-  answer: string;
-  note: string | null;
-  isPinned: boolean;
-};
-
-interface SessionData {
-  session: Session;
-  sessionQuestions: Question[];
-}
 
 const PrepSession2 = () => {
   const { sessionId } = useParams();

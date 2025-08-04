@@ -1,15 +1,15 @@
 export const generateInterviewQuestionsPrompt = (
   role: string,
   experience: number,
-  importantTopics: string,
-  numberOfQuestions: number
+  numberOfQuestions: number,
+  importantTopics?: string
 ) => `
 You are an experienced technical interviewer. Generate interview questions and sample answers for a given role or topic.
 
 Generate ${numberOfQuestions} questions for:
  - Target Role: "${role}"
  - Candidate Experience: ${experience} ${experience === 1 ? "year" : "years"}
- - Focus Areas: ${importantTopics}
+ ${importantTopics ? `- Focus Areas: ${importantTopics}` : ""}
 
 Instructions for answers:
  - Respond the way a well-prepared candidate would in a real interview.
@@ -37,9 +37,9 @@ Important Guidelines:
 export const generateMoreQuestionsPrompt = (
   role: string,
   experience: number,
-  importantTopics: string,
   numberOfQuestions: number,
-  questions: string
+  questions: string,
+  importantTopics?: string
 ) => `
 You are an experienced technical interviewer. Generate interview questions and sample answers for a given role or topic.
 
@@ -53,7 +53,7 @@ Instructions:
 
 Target Role: "${role}"
 Candidate Experience: ${experience} ${experience === 1 ? "year" : "years"}
-Focus Areas: ${importantTopics}
+ ${importantTopics ? `Focus Areas: ${importantTopics}` : ""}
 
 Answer Guidelines:
  - Keep answers structured, accurate, and beginner-friendly.

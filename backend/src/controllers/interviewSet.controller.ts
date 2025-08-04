@@ -126,9 +126,9 @@ export const generateMoreQuestions = asyncHandler(async (req, res) => {
   const generatedQuestions = await generateMoreAIQuestions({
     role: set.role,
     experience: set.experience,
-    importantTopics: set.importantTopics,
     numberOfQuestions: 10,
     questions: questionList,
+    importantTopics: set.importantTopics!,
   });
 
   const questionData = generatedQuestions.map(({ question, answer }) => ({

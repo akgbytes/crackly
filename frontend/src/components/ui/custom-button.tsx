@@ -3,17 +3,19 @@ import type { AnchorHTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { Link } from "react-router-dom";
 
-interface CustomButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {}
+interface CustomButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+  to: string;
+}
 
 export const CustomButton = ({
   className,
   children,
-  href,
+  to,
   ...props
 }: CustomButtonProps) => {
   return (
     <Link
-      to={href ?? "#"}
+      to={to ?? "#"}
       className={cn(
         "group relative flex transform items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-md border border-white bg-sky-700 px-8 text-base/7 font-medium text-white transition-all duration-300 hover:ring-2 hover:ring-sky-700 hover:ring-offset-2 focus:outline-none focus:ring-2 focus:ring-offset-2",
         className

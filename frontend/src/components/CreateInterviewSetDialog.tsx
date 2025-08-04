@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAppContext } from "../hooks/useAppContext";
+
 import {
   Dialog,
   DialogClose,
@@ -12,51 +12,54 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import Input from "./Input";
+import CustomInput from "./ui/custom-input";
 import { Button } from "./ui/button";
 import Spinner from "./Spinner";
+import type { InterviewSetForm } from "../types";
+import { BASE_URL } from "../constants";
+import { toast } from "react-toastify";
 
-interface SessionForm {
-  role: string;
-  experience: number;
-  importantTopics: string;
-}
-
-interface CreateSessionDialogProps {
+interface CreateInterviewSetDialogProps {
   children: React.ReactNode;
   onSuccess: () => void;
 }
 
-const CreateSessionDialog = ({
+const CreateInterviewSetDialog = ({
   children,
   onSuccess,
-}: CreateSessionDialogProps) => {
+}: CreateInterviewSetDialogProps) => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<SessionForm>();
-
-  const { SERVER_URL } = useAppContext();
+  } = useForm<InterviewSetForm>();
 
   const [showDialog, setShowDialog] = useState(false);
 
-  const onSubmit = async (data: SessionForm) => {
+  const onSubmit = async (data: InterviewSetForm) => {
+    console.log("data before submitting: ", data);
+    const { role, experience, importantTopics } = data;
     try {
-      await axios.post(
-        `${SERVER_URL}/api/v1/sessions/generate`,
-        {
-          ...data,
-          numberOfQuestions: 10,
-        },
-        { withCredentials: true }
-      );
+      const payload = {
+        role,
+        experience,
+        numberOfQuestions: 10,
+        ...(importantTopics?.trim()
+          ? { importantTopics: importantTopics.trim() }
+          : {}),
+      };
+
+      await axios.post(`${BASE_URL}/generate`, payload, {
+        withCredentials: true,
+      });
 
       reset();
       setShowDialog(false);
       onSuccess();
-    } catch (error: any) {}
+    } catch (error: any) {
+      toast.error("Error generating interview questions");
+    }
   };
 
   return (
@@ -75,7 +78,7 @@ const CreateSessionDialog = ({
           <div className="grid gap-4 py-4">
             {/* Role */}
             <div className="flex flex-col space-y-1.5">
-              <Input
+              <CustomInput
                 label="Target Role"
                 placeholder="e.g. Backend Developer"
                 {...register("role", {
@@ -87,7 +90,7 @@ const CreateSessionDialog = ({
 
             {/* Experience */}
             <div className="flex flex-col space-y-1.5">
-              <Input
+              <CustomInput
                 type="number"
                 label="Years of Experience"
                 placeholder="e.g. 2 years"
@@ -101,12 +104,10 @@ const CreateSessionDialog = ({
 
             {/* Important Topics */}
             <div className="flex flex-col space-y-1.5">
-              <Input
+              <CustomInput
                 label="Important Topics to Focus On"
-                placeholder="e.g. React, Node.js"
-                {...register("importantTopics", {
-                  required: "Topics are required",
-                })}
+                placeholder="e.g. NodeJS, Databases"
+                {...register("importantTopics")}
                 error={errors.importantTopics?.message}
               />
             </div>
@@ -122,10 +123,10 @@ const CreateSessionDialog = ({
               {isSubmitting ? (
                 <div className="flex items-center gap-2">
                   <Spinner />
-                  Creating Session
+                  Creating Interview Set...
                 </div>
               ) : (
-                "Create Session"
+                "Create Interview Set"
               )}
             </Button>
           </DialogFooter>
@@ -135,4 +136,4 @@ const CreateSessionDialog = ({
   );
 };
 
-export default CreateSessionDialog;
+export default CreateInterviewSetDialog;

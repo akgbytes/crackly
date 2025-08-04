@@ -1,4 +1,4 @@
-import type { Session } from "../pages/Dashboard";
+import type { InterviewSet } from "../types";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -9,34 +9,34 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 
-interface DeleteSessionDialogProps {
+interface DeleteInterviewSetDialogProps {
   open: boolean;
-  session: Session | null;
+  interviewSet: InterviewSet | null;
   onClose: () => void;
-  onDelete: (session: Session | null) => void;
+  onDelete: (interviewSet: InterviewSet | null) => void;
 }
 
-const DeleteSessionDialog = ({
+const DeleteInterviewSetDialog = ({
   open,
-  session,
+  interviewSet,
   onClose,
   onDelete,
-}: DeleteSessionDialogProps) => {
+}: DeleteInterviewSetDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Delete Session</DialogTitle>
+          <DialogTitle>Delete Interview Set</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this session? This action cannot be
-            undone.
+            Are you sure you want to delete this interview set? This action
+            cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex justify-end gap-2">
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="destructive" onClick={() => onDelete(session)}>
+          <Button variant="destructive" onClick={() => onDelete(interviewSet)}>
             Delete
           </Button>
         </DialogFooter>
@@ -45,4 +45,4 @@ const DeleteSessionDialog = ({
   );
 };
 
-export default DeleteSessionDialog;
+export default DeleteInterviewSetDialog;

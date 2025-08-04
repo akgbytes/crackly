@@ -6,7 +6,10 @@ export const createInterviewSetSchema = z.object({
     .number({ invalid_type_error: "Experience must be a number" })
     .min(0, { message: "Experience must be at least 0 years" })
     .max(50, { message: "Experience cannot exceed 50 years" }),
-  importantTopics: z.string().nonempty("Important topics are required"),
+  importantTopics: z
+    .string()
+    .nonempty("Important topics are required")
+    .optional(),
   numberOfQuestions: z.number(),
 });
 

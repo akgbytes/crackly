@@ -9,7 +9,7 @@ export const interviewSet = pgTable(
     userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
     role: text("role").notNull(),
     experience: integer("experience").notNull(),
-    importantTopics: text("important_topics").notNull(),
+    importantTopics: text("important_topics"),
     ...timestamps,
   },
   (table) => [uniqueIndex("uniqueRolePerUser").on(table.userId, table.role)]

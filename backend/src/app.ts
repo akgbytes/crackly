@@ -20,12 +20,12 @@ app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
 
 import healthRoute from "./routes/healthCheck.route";
-// import sessionRoutes from "./routes/sessions.routes";
+import interviewSetRoutes from "./routes/interviewSet.route";
 import { errorHandler } from "./middlewares/error.middleware";
 import { env } from "./configs/env";
 
-app.use("/api/v1/healthCheck", healthRoute);
-// app.use("/api/v1/sessions", sessionRoutes);
+app.use("/api/v1/health", healthRoute);
+app.use("/api/v1/interview-set", interviewSetRoutes);
 
 app.use(errorHandler);
 

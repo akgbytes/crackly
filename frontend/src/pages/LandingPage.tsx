@@ -1,22 +1,11 @@
-// import { useAppContext } from "../hooks/useAppContext";
-
 import { Navbar } from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import { Heading } from "../components/ui/heading";
-import { Link } from "react-router-dom";
+
 import CTA from "../components/CTA";
 import { Footer } from "../components/Footer";
 
 const LandingPage = () => {
-  // const { navigate, user } = useAppContext();
-
-  // const handleCTA = () => {
-  //   if (!user) {
-  //     navigate("/login");
-  //   } else {
-  //     navigate("/dashboard");
-  //   }
-  // };
   return (
     <>
       <Navbar />

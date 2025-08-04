@@ -17,7 +17,7 @@ const CTA = () => {
           <div className="flex justify-center items-center gap-4">
             <div className="w-full max-w-80">
               <CustomButton
-                href="/sign-up"
+                to="/sign-up"
                 className="relative z-10 h-14 w-full text-base shadow-lg transition-shadow duration-300 hover:shadow-xl"
               >
                 Start Preparing
