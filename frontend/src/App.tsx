@@ -6,29 +6,11 @@ import LandingPage from "./pages/LandingPage";
 // import PrepSession from "./pages/PrepSession";
 import NotFound from "./pages/NotFound";
 import ProtectedRoutes from "./pages/ProtectedRoutes";
-import { useEffect } from "react";
-import axios from "axios";
-import { useAppContext } from "./hooks/useAppContext";
+
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 
 const App = () => {
-  const { SERVER_URL, setUser, setLoading } = useAppContext();
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const res = await axios.get(`${SERVER_URL}/api/v1/auth/me`, {
-          withCredentials: true,
-        });
-        setUser(res.data.data);
-      } catch (error: any) {
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchUser();
-  }, []);
   return (
     <div className="min-h-[calc(100vh-1px)] flex flex-col grainy antialiased">
       <main className="relative flex-1 flex flex-col">

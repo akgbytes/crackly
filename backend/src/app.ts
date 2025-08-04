@@ -19,9 +19,9 @@ app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use(express.json());
 
-import healthRoute from "./routes/healthCheck.routes";
+import healthRoute from "./routes/healthCheck.route";
 // import sessionRoutes from "./routes/sessions.routes";
-import { errorHandler } from "./middlewares/error.middlewares";
+import { errorHandler } from "./middlewares/error.middleware";
 
 app.use("/api/v1/healthCheck", healthRoute);
 // app.use("/api/v1/sessions", sessionRoutes);

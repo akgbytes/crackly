@@ -40,10 +40,10 @@ const SignIn = () => {
     },
   });
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     setError(null);
 
-    authClient.signIn.email(
+    await authClient.signIn.email(
       {
         email: data.email,
         password: data.password,
@@ -59,22 +59,13 @@ const SignIn = () => {
     );
   };
 
-  const onSocial = (provider: "google" | "github") => {
+  const onSocial = async (provider: "google" | "github") => {
     setError(null);
 
-    authClient.signIn.social(
-      {
-        provider,
-      },
-      {
-        onSuccess: () => {
-          navigate("/");
-        },
-        onError: ({ error }) => {
-          setError(error.message);
-        },
-      }
-    );
+    await authClient.signIn.social({
+      provider,
+      callbackURL: `${import.meta.env.VITE_APP_URL}`,
+    });
   };
 
   return (

@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { auth } from "../lib/auth";
 import { fromNodeHeaders } from "better-auth/node";
+import { CustomError } from "../utils/CustomError";
+import { ResponseStatus } from "../utils/constants";
 
 export const isLoggedIn = async (
   req: Request,
@@ -13,12 +15,12 @@ export const isLoggedIn = async (
     });
 
     if (!session || !session.user) {
-      return res.status(401).json({ message: "Unauthorized" });
+      throw new CustomError(ResponseStatus.Unauthorized, "Unauthorized");
     }
 
     req.user = session.user;
     next();
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
+    throw new CustomError(ResponseStatus.Unauthorized, "Unauthorized");
   }
 };

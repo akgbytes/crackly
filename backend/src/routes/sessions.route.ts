@@ -8,8 +8,8 @@ import {
   togglePinQuestion,
   updateQuestionNote,
   generateMoreQuestions,
-} from "../controllers/sessions.controllers";
-import { isLoggedIn } from "../middlewares/auth.middlewares";
+} from "../controllers/sessions.controller";
+import { isLoggedIn } from "../middlewares/auth.middleware";
 
 const router = Router();
 

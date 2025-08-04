@@ -32,9 +32,6 @@ const envSchema = z.object({
 
   DATABASE_URL: validURL("DATABASE_URL"),
 
-  JWT_SECRET: nonEmptyString("JWT_SECRET"),
-  JWT_EXPIRY: nonEmptyString("KWT_EXPIRY"),
-
   SERVER_URL: validURL("SERVER_URL"),
   CLIENT_URL: validURL("CLIENT_URL"),
 
