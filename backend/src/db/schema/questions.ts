@@ -1,12 +1,12 @@
 import { boolean, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { timestamps } from "./helper";
-import { users } from "./users";
-import { sessions } from "./sessions";
+import { user } from "./users";
+import { interviewSet } from "./interviewSet";
 
 export const questions = pgTable("questions", {
   id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
-  sessionId: uuid("session_id").references(() => sessions.id, {
+  userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
+  interviewSetId: uuid("interview_set_id").references(() => interviewSet.id, {
     onDelete: "cascade",
   }),
   question: text("question").notNull(),

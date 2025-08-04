@@ -23,13 +23,13 @@ const SessionCard: React.FC<SessionCardProps> = ({ session }) => {
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="space-y-2">
-            <CardTitle className="text-lg font-semibold text-gray-900 group-hover:text-pink-600 transition-colors">
+            <CardTitle className="text-xl font-semibold text-gray-900 group-hover:text-sky-600 transition-colors">
               {session.role}
             </CardTitle>
           </div>
 
           <Button
-            className="text-xs text-rose-500 font-medium bg-transparent cursor-pointer px-3 py-1 border-none hover:border-rose-200 hover:bg-transparent"
+            className="text-xs text-sky-500 font-medium bg-transparent cursor-pointer px-3 py-1 border-none hover:border-sky-200 hover:bg-transparent"
             onClick={(e) => {
               e.stopPropagation();
               session.onDelete();
@@ -43,14 +43,14 @@ const SessionCard: React.FC<SessionCardProps> = ({ session }) => {
       <CardContent className="space-y-4 -mt-8">
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center gap-2 text-gray-600">
-            <Target className="h-4 w-4 text-pink-500" />
+            <Target className="h-4 w-4 text-sky-500" />
             <span>
               {session.experience} {session.experience <= 1 ? "year" : "years"}{" "}
               exp.
             </span>
           </div>
           <div className="flex items-center gap-2 text-gray-600">
-            <Clock className="h-4 w-4 text-pink-500" />
+            <Clock className="h-4 w-4 text-sky-500" />
             <span>
               {new Date(session.createdAt).toLocaleDateString("en-US", {
                 year: "numeric",
@@ -63,7 +63,7 @@ const SessionCard: React.FC<SessionCardProps> = ({ session }) => {
 
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <BookOpen className="h-4 w-4 text-pink-500" />
+            <BookOpen className="h-4 w-4 text-sky-500" />
             <span className="font-medium">Focus Topics:</span>
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -73,7 +73,7 @@ const SessionCard: React.FC<SessionCardProps> = ({ session }) => {
               .map((topic, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-pink-50 text-pink-700 border border-pink-200"
+                  className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-sky-50 text-sky-700 border border-sky-200"
                 >
                   {topic.trim()}
                 </span>
@@ -92,7 +92,7 @@ const SessionCard: React.FC<SessionCardProps> = ({ session }) => {
           </div>
           <Button
             size="sm"
-            className="bg-primary hover:bg-rose-600 text-white px-4 py-2 cursor-pointer"
+            className="bg-primary hover:bg-sky-600 text-white px-4 py-2 cursor-pointer"
             onClick={session.onSelect}
           >
             <Play className="h-4 w-4 mr-1.5" />

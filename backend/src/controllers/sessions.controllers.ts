@@ -1,4 +1,4 @@
-import { sessions } from "./../db/schema/sessions";
+import { sessions } from "../db/schema/interviewSet";
 import { and, asc, count, desc, eq } from "drizzle-orm";
 import { db } from "../db";
 import { ApiResponse } from "../utils/ApiResponse";

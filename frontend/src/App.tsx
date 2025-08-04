@@ -1,14 +1,16 @@
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import LandingPage from "./pages/LandingPage";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
+// import Login from "./pages/Login";
+// import Dashboard from "./pages/Dashboard";
+// import PrepSession from "./pages/PrepSession";
 import NotFound from "./pages/NotFound";
-import PrepSession from "./pages/PrepSession";
 import ProtectedRoutes from "./pages/ProtectedRoutes";
 import { useEffect } from "react";
 import axios from "axios";
 import { useAppContext } from "./hooks/useAppContext";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 
 const App = () => {
   const { SERVER_URL, setUser, setLoading } = useAppContext();
@@ -32,10 +34,13 @@ const App = () => {
       <main className="relative flex-1 flex flex-col">
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
+
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+
           <Route element={<ProtectedRoutes />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/prep-session/:sessionId" element={<PrepSession />} />
+            {/* <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/prep-session/:sessionId" element={<PrepSession />} /> */}
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -67,24 +67,17 @@ const Dashboard = () => {
       <div className="mx-auto w-full max-w-screen-xl px-2.5 md:px-20">
         {/* Header */}
         <div className="flex items-center justify-between mb-6 px-2 md:px-4 mt-8">
-          <div className="flex items-center gap-4">
-            <img
-              src={user?.avatar || "/default-avatar.png"}
-              alt="User avatar"
-              className="w-10 h-10 rounded-full object-cover"
-            />
-            <div>
-              <h1 className="text-xl font-semibold text-gray-800">
-                Welcome back, {user?.name || "User"}
-              </h1>
-              <p className="text-sm text-gray-500">
-                Manage your interview prep sessions below
-              </p>
-            </div>
+          <div>
+            <h1 className="text-3xl eb_garamond font-semibold text-gray-800">
+              Welcome back, {user?.name || "User"}
+            </h1>
+            <p className="text-base text-gray-500">
+              Manage your interview prep sessions below
+            </p>
           </div>
 
           <CreateSessionDialog onSuccess={fetchAllSession}>
-            <Button className="mt-5 cursor-pointer">
+            <Button className="cursor-pointer">
               <Plus className="w-4 h-4 mr-2" />
               Add Session
             </Button>

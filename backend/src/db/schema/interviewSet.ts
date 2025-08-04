@@ -1,12 +1,12 @@
 import { pgTable, text, integer, uuid, uniqueIndex } from "drizzle-orm/pg-core";
-import { users } from "./users";
+import { user } from "./users";
 import { timestamps } from "./helper";
 
-export const sessions = pgTable(
-  "sessions",
+export const interviewSet = pgTable(
+  "interview_set",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+    userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
     role: text("role").notNull(),
     experience: integer("experience").notNull(),
     importantTopics: text("important_topics").notNull(),
