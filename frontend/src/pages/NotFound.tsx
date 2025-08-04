@@ -1,23 +1,21 @@
+import { Link } from "react-router-dom";
+
 const NotFound = () => {
   return (
-    <div>
-      <div className="bg-indigo-900 relative overflow-hidden h-screen">
-        <img
-          src="https://external-preview.redd.it/4MddL-315mp40uH18BgGL2-5b6NIPHcDMBSWuN11ynM.jpg?width=960&crop=smart&auto=webp&s=b98d54a43b3dac555df398588a2c791e0f3076d9"
-          className="absolute h-full w-full object-cover"
-        />
-        <div className="inset-0 bg-black opacity-25 absolute"></div>
-        <div className="mx-auto px-6 md:px-12 relative z-10 flex items-center py-32 xl:py-40">
-          <div className="w-full font-mono flex flex-col items-center relative z-10">
-            <h1 className="font-extrabold text-5xl text-center text-white leading-tight mt-4">
-              You are all alone here
-            </h1>
-            <p className="font-extrabold text-8xl my-44 text-white animate-bounce">
-              404
-            </p>
-          </div>
-        </div>
-      </div>
+    <div className="flex flex-col items-center justify-center h-screen text-center px-4">
+      <div className="text-5xl animate-bounce mb-4">🧐</div>
+      <h1 className="text-2xl font-semibold text-gray-800 mb-2">
+        Page Not Found
+      </h1>
+      <p className="text-gray-500 mb-6">
+        Hmm... looks like this page didn’t crack it.
+      </p>
+      <Link
+        to="/"
+        className="px-4 py-2 text-sm font-medium text-zinc-50 bg-sky-600 rounded-md hover:bg-sky-700 transition"
+      >
+        Go Back Home
+      </Link>
     </div>
   );
 };
