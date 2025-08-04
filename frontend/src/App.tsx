@@ -7,6 +7,7 @@ import ProtectedRoutes from "./layouts/ProtectedRoutes";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import AuthRoutes from "./layouts/AuthRoutes";
+import InterviewSetPage from "./pages/InterviewSetPage";
 
 const App = () => {
   return (
@@ -22,7 +23,10 @@ const App = () => {
 
           <Route element={<ProtectedRoutes />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            {/* <Route path="/interview-set/:setId" element={<InterviewSet />} /> */}
+            <Route
+              path="/interview-set/:setId"
+              element={<InterviewSetPage />}
+            />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

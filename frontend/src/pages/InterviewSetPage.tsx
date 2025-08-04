@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { LuCircleAlert } from "react-icons/lu";
+
 import AIResponsePreview from "../components/AIResponsePreview";
 import SkeletonLoader from "../components/SkeletonLoader";
 import axios from "axios";
@@ -12,13 +12,16 @@ import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import { Button } from "../components/ui/button";
 import { ArrowLeft, RefreshCcw } from "lucide-react";
+import type { InterviewSetData } from "../types";
+import { BASE_URL } from "../constants";
 
-const PrepSession2 = () => {
-  const { sessionId } = useParams();
-  const { SERVER_URL, navigate } = useAppContext();
-  const [sessionData, setSessionData] = useState<SessionData | null>(null);
+const InterviewSetPage = () => {
+  const { setId } = useParams();
+  const navigate = useNavigate();
 
-  const [error, setError] = useState("");
+  const [interviewSetData, setinterviewSetData] =
+    useState<InterviewSetData | null>(null);
+
   const [openLearnMoreDrawer, setOpenLearnMoreDrawer] = useState(false);
   const [explanation, setExplanation] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,24 +30,24 @@ const PrepSession2 = () => {
 
   const fetchSessionDetailsById = async () => {
     try {
-      const response = await axios.get(
-        `${SERVER_URL}/api/v1/sessions/${sessionId}/questions`,
-        { withCredentials: true }
-      );
+      const response = await axios.get(`${BASE_URL}/${setId}/questions`, {
+        withCredentials: true,
+      });
 
-      setSessionData(response.data.data);
-    } catch (error) {}
+      setinterviewSetData(response.data.data);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message);
+    }
   };
 
   const generateConceptExplanation = async (question: string, id: string) => {
     try {
-      setError("");
       setExplanation(null);
       setIsLoading(true);
       setOpenLearnMoreDrawer(true);
 
       const response = await axios.post(
-        `${SERVER_URL}/api/v1/sessions/${sessionData?.session.id}/question/${id}/explain`,
+        `${BASE_URL}/${interviewSetData?.interviewSet.id}/question/${id}/explain`,
         { question },
         { withCredentials: true }
       );
@@ -52,9 +55,9 @@ const PrepSession2 = () => {
       if (response.data) {
         setExplanation(response.data.data);
       }
-    } catch (error) {
+    } catch (error: any) {
       setExplanation(null);
-      setError("Failed to generate explanation. Try again later.");
+      toast.error(error.response?.data?.message);
     } finally {
       setIsLoading(false);
     }
@@ -63,24 +66,26 @@ const PrepSession2 = () => {
   const toggleQuestionPinStatus = async (questionId: string) => {
     try {
       await axios.post(
-        `${SERVER_URL}/api/v1/sessions/${sessionData?.session.id}/question/${questionId}/pin`,
+        `${BASE_URL}/${interviewSetData?.interviewSet.id}/question/${questionId}/pin`,
         {},
         { withCredentials: true }
       );
 
       toast.success("Question Pinned Successfully");
       fetchSessionDetailsById();
-    } catch (error) {}
+    } catch (error: any) {
+      toast.error(error.response?.data?.message);
+    }
   };
 
   const uploadMoreQuestions = async () => {
-    const previousQuestions = sessionData?.sessionQuestions.map(
+    const previousQuestions = interviewSetData?.interviewSetQuestions.map(
       ({ question }) => question
     );
     try {
       setIsUpdateLoader(true);
       await axios.post(
-        `${SERVER_URL}/api/v1/sessions/${sessionData?.session.id}/generate/more`,
+        `${BASE_URL}/${interviewSetData?.interviewSet.id}/generate/more`,
         {
           questions: previousQuestions,
         },
@@ -91,17 +96,17 @@ const PrepSession2 = () => {
 
       fetchSessionDetailsById();
     } catch (error: any) {
-      setError(error.response.data.message);
+      toast.error(error.response?.data?.message);
     } finally {
       setIsUpdateLoader(false);
     }
   };
 
   useEffect(() => {
-    if (sessionId) fetchSessionDetailsById();
-  }, [sessionId]);
+    if (setId) fetchSessionDetailsById();
+  }, [setId]);
 
-  if (!sessionData) {
+  if (!interviewSetData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div>Loading...</div>
@@ -123,15 +128,17 @@ const PrepSession2 = () => {
           </Button>
         </div>
         <RoleInfo
-          role={sessionData?.session.role || ""}
-          importantTopics={sessionData?.session.importantTopics || ""}
-          experience={sessionData?.session.experience}
-          questions={sessionData?.sessionQuestions.length}
-          createdAt={sessionData?.session.createdAt}
+          role={interviewSetData?.interviewSet?.role || ""}
+          importantTopics={interviewSetData?.interviewSet.importantTopics || ""}
+          experience={interviewSetData?.interviewSet.experience}
+          questions={interviewSetData?.interviewSetQuestions.length}
+          createdAt={interviewSetData?.interviewSet.createdAt}
         />
 
         <div className="container mx-auto pt-6 px-4 md:px-0">
-          <h2 className="text-lg font-semibold text-black">Interview Q & A</h2>
+          <h2 className="text-2xl font-semibold text-zinc-900">
+            Interview Set
+          </h2>
           <div className="grid grid-cols-12 gap-4 mt-2 mb-10">
             <div
               className={`col-span-12 ${
@@ -139,7 +146,7 @@ const PrepSession2 = () => {
               }`}
             >
               <AnimatePresence>
-                {sessionData?.sessionQuestions?.map((data, index) => (
+                {interviewSetData?.interviewSetQuestions?.map((data, index) => (
                   <motion.div
                     key={data.id || index}
                     initial={{ opacity: 0, y: -20 }}
@@ -168,7 +175,8 @@ const PrepSession2 = () => {
                       />
 
                       {!isLoading &&
-                        sessionData.sessionQuestions?.length === index + 1 && (
+                        interviewSetData?.interviewSetQuestions?.length ===
+                          index + 1 && (
                           <div className="flex items-center justify-center mt-5">
                             <Button
                               className="min-w-64 cursor-pointer"
@@ -198,13 +206,6 @@ const PrepSession2 = () => {
               onClose={() => setOpenLearnMoreDrawer(false)}
               title={!isLoading && explanation?.title}
             >
-              {error && (
-                <p className="flex gap-2 text-sm text-amber-600 font-medium">
-                  <LuCircleAlert className="mt-1" />
-                  {error}
-                </p>
-              )}
-
               {isLoading && <SkeletonLoader />}
               {!isLoading && explanation && (
                 <AIResponsePreview content={explanation?.explanation} />
@@ -217,4 +218,4 @@ const PrepSession2 = () => {
   );
 };
 
-export default PrepSession2;
+export default InterviewSetPage;

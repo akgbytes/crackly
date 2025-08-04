@@ -10,13 +10,13 @@ import {
   validateSession,
 } from "../validations/interviewSet.validation";
 import { CustomError } from "../utils/CustomError";
-import { questions } from "../db/schema/questions";
+import { questionsTable } from "../db/schema/questions";
 import {
   generateAIQuestions,
   generateConceptExplanation,
   generateMoreAIQuestions,
 } from "../utils/openai";
-import { interviewSet } from "../db/schema/interviewSet";
+import { interviewSetTable } from "../db/schema/interviewSet";
 
 export const generateCompleteInterviewSet = asyncHandler(async (req, res) => {
   const userId = req.user.id;
@@ -37,8 +37,8 @@ export const generateCompleteInterviewSet = asyncHandler(async (req, res) => {
 
   try {
     const result = await db.transaction(async (tx) => {
-      const [set] = await tx
-        .insert(interviewSet)
+      const [interviewSet] = await tx
+        .insert(interviewSetTable)
         .values({
           userId,
           role,
@@ -47,7 +47,7 @@ export const generateCompleteInterviewSet = asyncHandler(async (req, res) => {
         })
         .returning();
 
-      if (!set) {
+      if (!interviewSet) {
         throw new CustomError(
           ResponseStatus.InternalServerError,
           "Failed to create interview set"
@@ -55,19 +55,19 @@ export const generateCompleteInterviewSet = asyncHandler(async (req, res) => {
       }
 
       const questionData = generatedQuestions.map(({ question, answer }) => ({
-        interviewSetId: set.id,
+        interviewSetId: interviewSet.id,
         userId,
         question,
         answer,
       }));
 
       const insertedQuestions = await tx
-        .insert(questions)
+        .insert(questionsTable)
         .values(questionData)
         .returning();
 
       return {
-        set,
+        interviewSet,
         questions: insertedQuestions,
       };
     });
@@ -93,12 +93,12 @@ export const generateMoreQuestions = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const { interviewSetId } = req.params;
   const { questions: questionList } = req.body;
-  const [set] = await db
+  const [interviewSet] = await db
     .select()
-    .from(interviewSet)
-    .where(eq(interviewSet.id, interviewSetId));
+    .from(interviewSetTable)
+    .where(eq(interviewSetTable.id, interviewSetId));
 
-  if (!set) {
+  if (!interviewSet) {
     throw new CustomError(
       ResponseStatus.BadRequest,
       "Invalid interview set id"
@@ -108,8 +108,8 @@ export const generateMoreQuestions = asyncHandler(async (req, res) => {
   // count no of question, if already 30 then return
   const [existingQuestions] = await db
     .select({ count: count() })
-    .from(questions)
-    .where(eq(questions.interviewSetId, interviewSetId));
+    .from(questionsTable)
+    .where(eq(questionsTable.interviewSetId, interviewSetId));
 
   if (existingQuestions.count >= 30) {
     return res
@@ -124,22 +124,22 @@ export const generateMoreQuestions = asyncHandler(async (req, res) => {
   }
 
   const generatedQuestions = await generateMoreAIQuestions({
-    role: set.role,
-    experience: set.experience,
+    role: interviewSet.role,
+    experience: interviewSet.experience,
     numberOfQuestions: 10,
     questions: questionList,
-    importantTopics: set.importantTopics!,
+    importantTopics: interviewSet.importantTopics!,
   });
 
   const questionData = generatedQuestions.map(({ question, answer }) => ({
-    interviewSetId: set.id,
+    interviewSetId: interviewSet.id,
     userId,
     question,
     answer,
   }));
 
   const insertedQuestions = await db
-    .insert(questions)
+    .insert(questionsTable)
     .values(questionData)
     .returning();
 
@@ -158,26 +158,28 @@ export const deleteInterviewSet = asyncHandler(async (req, res) => {
   const { interviewSetId } = req.params;
   const { id } = req.user;
 
-  const [set] = await db
+  const [interviewSet] = await db
     .select()
-    .from(interviewSet)
-    .where(eq(interviewSet.id, interviewSetId));
+    .from(interviewSetTable)
+    .where(eq(interviewSetTable.id, interviewSetId));
 
-  if (!set) {
+  if (!interviewSet) {
     throw new CustomError(
       ResponseStatus.BadRequest,
       "Invalid interview set id"
     );
   }
 
-  if (set.userId !== id) {
+  if (interviewSet.userId !== id) {
     throw new CustomError(
       ResponseStatus.Unauthorized,
       "Not authorized to delete this interview session"
     );
   }
 
-  await db.delete(interviewSet).where(eq(interviewSet.id, interviewSetId));
+  await db
+    .delete(interviewSetTable)
+    .where(eq(interviewSetTable.id, interviewSetId));
 
   res
     .status(ResponseStatus.Success)
@@ -196,18 +198,18 @@ export const getInterviewSetWithQuestionCount = asyncHandler(
 
     const interviewSetData = await db
       .select({
-        id: interviewSet.id,
-        role: interviewSet.role,
-        importantTopics: interviewSet.importantTopics,
-        experience: interviewSet.experience,
-        createdAt: interviewSet.createdAt,
+        id: interviewSetTable.id,
+        role: interviewSetTable.role,
+        importantTopics: interviewSetTable.importantTopics,
+        experience: interviewSetTable.experience,
+        createdAt: interviewSetTable.createdAt,
         questionsCount: db.$count(
-          questions,
-          eq(questions.interviewSetId, interviewSet.id)
+          questionsTable,
+          eq(questionsTable.interviewSetId, interviewSetTable.id)
         ),
       })
-      .from(interviewSet)
-      .where(eq(interviewSet.userId, userId));
+      .from(interviewSetTable)
+      .where(eq(interviewSetTable.userId, userId));
 
     res
       .status(ResponseStatus.Success)
@@ -225,14 +227,17 @@ export const getQuestionsByInterviewSetId = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const interviewSetId = req.params.interviewSetId;
 
-  const [set] = await db
+  const [interviewSet] = await db
     .select()
-    .from(interviewSet)
+    .from(interviewSetTable)
     .where(
-      and(eq(interviewSet.id, interviewSetId), eq(interviewSet.userId, userId))
+      and(
+        eq(interviewSetTable.id, interviewSetId),
+        eq(interviewSetTable.userId, userId)
+      )
     );
 
-  if (!set) {
+  if (!interviewSet) {
     throw new CustomError(
       ResponseStatus.NotFound,
       "Invalid interview set id or not authorized"
@@ -241,13 +246,13 @@ export const getQuestionsByInterviewSetId = asyncHandler(async (req, res) => {
 
   const interviewSetQuestions = await db
     .select()
-    .from(questions)
-    .where(eq(questions.interviewSetId, interviewSetId))
-    .orderBy(desc(questions.isPinned), asc(questions.createdAt));
+    .from(questionsTable)
+    .where(eq(questionsTable.interviewSetId, interviewSetId))
+    .orderBy(desc(questionsTable.isPinned), asc(questionsTable.createdAt));
 
   res.status(ResponseStatus.Success).json(
     new ApiResponse(ResponseStatus.Success, "Questions fetched successfully", {
-      set,
+      interviewSet,
       interviewSetQuestions,
     })
   );
@@ -274,17 +279,17 @@ export const togglePinQuestion = asyncHandler(async (req, res) => {
 
   const [question] = await db
     .select()
-    .from(questions)
-    .where(eq(questions.id, questionId));
+    .from(questionsTable)
+    .where(eq(questionsTable.id, questionId));
 
   if (!question || question.userId !== req.user.id) {
     throw new CustomError(ResponseStatus.NotFound, "Question not found");
   }
 
   await db
-    .update(questions)
+    .update(questionsTable)
     .set({ isPinned: !question.isPinned })
-    .where(eq(questions.id, questionId));
+    .where(eq(questionsTable.id, questionId));
 
   res.status(ResponseStatus.Success).json(
     new ApiResponse(ResponseStatus.Success, "Pin status toggled successfully", {
@@ -299,14 +304,17 @@ export const updateQuestionNote = asyncHandler(async (req, res) => {
 
   const [question] = await db
     .select()
-    .from(questions)
-    .where(eq(questions.id, questionId));
+    .from(questionsTable)
+    .where(eq(questionsTable.id, questionId));
 
   if (!question || question.userId !== req.user.id) {
     throw new CustomError(ResponseStatus.NotFound, "Question not found");
   }
 
-  await db.update(questions).set({ note }).where(eq(questions.id, questionId));
+  await db
+    .update(questionsTable)
+    .set({ note })
+    .where(eq(questionsTable.id, questionId));
 
   res.status(ResponseStatus.Success).json(
     new ApiResponse(ResponseStatus.Success, "Note updated successfully", {

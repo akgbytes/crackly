@@ -38,7 +38,6 @@ const CreateInterviewSetDialog = ({
   const [showDialog, setShowDialog] = useState(false);
 
   const onSubmit = async (data: InterviewSetForm) => {
-    console.log("data before submitting: ", data);
     const { role, experience, importantTopics } = data;
     try {
       const payload = {
@@ -68,7 +67,7 @@ const CreateInterviewSetDialog = ({
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Create a New Interview Session</DialogTitle>
+            <DialogTitle>Create a New Interview Set</DialogTitle>
             <DialogDescription>
               Fill out a few quick details and unlock your personalized set of
               interview questions!
@@ -105,7 +104,7 @@ const CreateInterviewSetDialog = ({
             {/* Important Topics */}
             <div className="flex flex-col space-y-1.5">
               <CustomInput
-                label="Important Topics to Focus On"
+                label="Important Topics (Optional)"
                 placeholder="e.g. NodeJS, Databases"
                 {...register("importantTopics")}
                 error={errors.importantTopics?.message}

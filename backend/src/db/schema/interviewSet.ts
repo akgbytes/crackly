@@ -2,7 +2,7 @@ import { pgTable, text, integer, uuid, uniqueIndex } from "drizzle-orm/pg-core";
 import { user } from "./users";
 import { timestamps } from "./helper";
 
-export const interviewSet = pgTable(
+export const interviewSetTable = pgTable(
   "interview_set",
   {
     id: uuid("id").defaultRandom().primaryKey(),

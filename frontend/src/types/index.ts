@@ -2,7 +2,7 @@ export interface InterviewSet {
   id: string;
   role: string;
   experience: number;
-  importantTopics: string;
+  importantTopics?: string;
   createdAt: string;
   questionsCount: number;
 }
@@ -14,10 +14,10 @@ export type InterviewSetExtended = {
   userId: string;
   role: string;
   experience: number;
-  importantTopics: string;
+  importantTopics?: string;
 };
 
-type Question = {
+export type Question = {
   createdAt: string;
   updatedAt: string;
   id: string;
@@ -29,9 +29,9 @@ type Question = {
   isPinned: boolean;
 };
 
-interface SessionData {
-  session: Session;
-  sessionQuestions: Question[];
+export interface InterviewSetData {
+  interviewSet: InterviewSetExtended;
+  interviewSetQuestions: Question[];
 }
 
 export interface InterviewSetForm {
