@@ -1,143 +1,102 @@
-import { Button } from "../components/ui/button";
-import { ArrowRight, Sparkles } from "lucide-react";
-import FeatureCard from "../components/FeatureCard";
-import { useAppContext } from "../hooks/useAppContext";
-import Footer from "../components/Footer";
-import { FEATURES } from "../constants/features";
-import { Badge } from "../components/ui/badge";
+// import { useAppContext } from "../hooks/useAppContext";
+
 import { Navbar } from "../components/Navbar";
+import HeroSection from "../components/HeroSection";
+import { Heading } from "../components/ui/heading";
+import { Link } from "react-router-dom";
+import CTA from "../components/CTA";
+import { Footer } from "../components/Footer";
 
 const LandingPage = () => {
-  const { navigate, user } = useAppContext();
+  // const { navigate, user } = useAppContext();
 
-  const handleCTA = () => {
-    if (!user) {
-      navigate("/login");
-    } else {
-      navigate("/dashboard");
-    }
-  };
+  // const handleCTA = () => {
+  //   if (!user) {
+  //     navigate("/login");
+  //   } else {
+  //     navigate("/dashboard");
+  //   }
+  // };
   return (
     <>
       <Navbar />
-
-      <div className="mb-12 mt-28 sm:mt-40 flex flex-col items-center justify-center text-center h-full mx-auto w-full max-w-screen-xl px-2.5 md:px-20">
-        <div className="mx-auto mb-4 flex max-w-fit items-center justify-center space-x-2 rounded-full bg-white/70 px-7 py-2 shadow">
-          <Sparkles size={16} className="text-primary" />
-          <p className="text-sm font-semibold text-zinc-800">AI Powered</p>
-        </div>
-        <h1 className="max-w-4xl text-5xl font-bold md:text-6xl lg:text-7xl">
-          <span className="text-primary">Crack Interviews Smarter</span> Not
-          Harder
-        </h1>
-        <p className="mt-5 max-w-prose text-zinc-700 sm:text-lg">
-          PrepGenie delivers questions tailored to your role and experience.
-          Explore answers on your terms, dive deep with AI-powered concept
-          breakdowns, and stay organized with notes and pins.
-        </p>
-
-        <Button onClick={handleCTA} className="mt-5 cursor-pointer">
-          Get started <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
-      </div>
-
-      {/* Session Preview */}
+      <HeroSection />;
       <div>
-        <div className="relative isolate">
-          <div className="mx-auto max-w-6xl px-6 lg:px-8">
-            <div className="mt-16 flow-root sm:mt-24">
-              <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-                <img
-                  src="/dashboard.png"
-                  alt="session preview"
-                  width={1364}
-                  height={866}
-                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
-                />
-              </div>
+        <div className="mx-auto max-w-6xl px-6 lg:px-8">
+          <div className="flow-root sm:mt-24">
+            <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+              <img
+                src="/dashboard-preview.jpg"
+                alt="product preview"
+                width={1364}
+                height={866}
+                className="rounded-md bg-white p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10"
+              />
             </div>
           </div>
         </div>
       </div>
-
-      {/* Feature section */}
-      <section
-        id="features"
-        className="flex flex-col items-center container mt-32 mx-auto px-6 py-20"
-      >
-        <div className="text-center mb-8">
-          <Badge className="mb-4 bg-rose-100 text-rose-700 font-semibold">
-            Why Choose PrepGenie
-          </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Everything You Need to Succeed
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium">
-            Our AI-powered platform adapts to your specific needs and gives you
-            the edge in any interview
-          </p>
-        </div>
-
-        <div className="">
-          <FeatureCard features={FEATURES} />
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section
-        id="how-it-works"
-        className="container mt-8 mx-auto px-6 py-8 mb-8"
-      >
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-green-100 text-green-700">
+      <div className="mx-auto mb-32 mt-32 max-w-5xl sm:mt-56">
+        <div className="mb-12 px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl sm:text-center">
+            <h2 className="text-center text-base/7 font-semibold text-sky-600">
               How It Works
-            </Badge>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Simple. Smart. Effective.
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Get started with your interview prep in just three easy steps
+            <Heading>Start preparing in minutes</Heading>
+            <p className="mt-4 text-lg text-gray-600">
+              Getting interview-ready with Crackly is fast, simple, and
+              personalized.
             </p>
           </div>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="text-center">
-              <div className="bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-6">
-                1
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Set Your Profile</h3>
-              <p className="text-gray-600">
-                Tell us about your target role, experience level, and the topics
-                you want to focus on
-              </p>
+        {/* Steps */}
+        <ol className="my-8 space-y-4 pt-8 md:flex md:space-x-12 md:space-y-0">
+          <li className="md:flex-1">
+            <div className="flex flex-col space-y-2 border-l-4 border-zinc-300 py-2 pl-4 md:border-l-0 md:border-t-2 md:pb-0 md:pl-0 md:pt-4">
+              <span className="text-sm font-medium text-sky-600">Step 1</span>
+              <span className="text-xl font-semibold">Create your account</span>
+              <span className="mt-2 text-zinc-700">
+                Sign up in seconds — no credit card, no paywall.
+              </span>
             </div>
-
-            <div className="text-center">
-              <div className="bg-purple-600 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-6">
-                2
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Get AI Questions</h3>
-              <p className="text-gray-600">
-                Our AI generates personalized interview questions based on your
-                profile and preferences
-              </p>
+          </li>
+          <li className="md:flex-1">
+            <div className="flex flex-col space-y-2 border-l-4 border-zinc-300 py-2 pl-4 md:border-l-0 md:border-t-2 md:pb-0 md:pl-0 md:pt-4">
+              <span className="text-sm font-medium text-sky-600">Step 2</span>
+              <span className="text-xl font-semibold">Pick your role</span>
+              <span className="mt-2 text-zinc-700">
+                Tell us what you&apos;re aiming for so we can tailor the right
+                questions for you.
+              </span>
             </div>
+          </li>
+          <li className="md:flex-1">
+            <div className="flex flex-col space-y-2 border-l-4 border-zinc-300 py-2 pl-4 md:border-l-0 md:border-t-2 md:pb-0 md:pl-0 md:pt-4">
+              <span className="text-sm font-medium text-sky-600">Step 3</span>
+              <span className="text-xl font-semibold">Start practicing</span>
+              <span className="mt-2 text-zinc-700">
+                Get smart, role-specific questions with clear explanations.
+              </span>
+            </div>
+          </li>
+        </ol>
 
-            <div className="text-center">
-              <div className="bg-green-600 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-6">
-                3
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Practice & Learn</h3>
-              <p className="text-gray-600">
-                Practice with detailed answers and deep-dive explanations to
-                master each concept
-              </p>
+        <div className="mx-auto max-w-6xl px-6 lg:px-8">
+          <div className="mt-16 flow-root sm:mt-24">
+            <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+              <img
+                src="/file-upload-preview.jpg"
+                alt="uploading preview"
+                width={1419}
+                height={732}
+                className="rounded-md bg-white p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10"
+              />
             </div>
           </div>
         </div>
-      </section>
-
+      </div>
+      <CTA />
       <Footer />
     </>
   );
