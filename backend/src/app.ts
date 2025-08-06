@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
+import { env } from "./configs/env";
 
 const app = express();
 
@@ -22,7 +23,6 @@ app.use(express.json());
 import healthRoute from "./routes/healthCheck.route";
 import interviewSetRoutes from "./routes/interviewSet.route";
 import { errorHandler } from "./middlewares/error.middleware";
-import { env } from "./configs/env";
 
 app.use("/api/v1/health", healthRoute);
 app.use("/api/v1/interview-set", interviewSetRoutes);
