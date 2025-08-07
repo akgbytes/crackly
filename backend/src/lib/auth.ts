@@ -33,10 +33,12 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      redirectURI: env.CLIENT_URL,
     },
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      redirectURI: env.CLIENT_URL,
     },
   },
   trustedOrigins: [env.CLIENT_URL],
