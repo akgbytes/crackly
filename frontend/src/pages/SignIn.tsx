@@ -50,7 +50,7 @@ const SignIn = () => {
       },
       {
         onSuccess: () => {
-          navigate("/");
+          navigate("/dashboard");
         },
         onError: ({ error }) => {
           setError(error.message);
@@ -64,7 +64,7 @@ const SignIn = () => {
 
     await authClient.signIn.social({
       provider,
-      callbackURL: `${import.meta.env.VITE_FRONTEND_URL}`,
+      callbackURL: `${import.meta.env.VITE_FRONTEND_URL}/dashboard`,
     });
   };
 

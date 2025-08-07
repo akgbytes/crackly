@@ -21,8 +21,6 @@ interface InterviewSetCardProps {
 const InterviewSetCard: React.FC<InterviewSetCardProps> = ({
   interviewSet,
 }) => {
-  const topics =
-    interviewSet.importantTopics?.split(",").map((t) => t.trim()) || [];
   return (
     <Card className="group hover:shadow-lg transition-all duration-300  bg-[#fef9f7]">
       <CardHeader className="pb-3">
