@@ -17,6 +17,10 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  cookieOptions: {
+    sameSite: "none",
+    secure: true,
+  },
   advanced: {
     cookies: {
       session_token: {
