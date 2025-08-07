@@ -74,10 +74,13 @@ const SignUp = () => {
   const onSocial = async (provider: "google" | "github") => {
     setError(null);
 
-    await authClient.signIn.social({
-      provider,
-      callbackURL: `${import.meta.env.VITE_FRONTEND_URL}/dashboard`,
-    });
+    await authClient.signIn.social(
+      {
+        provider,
+        callbackURL: `${import.meta.env.VITE_FRONTEND_URL}/dashboard`,
+      },
+      { onSuccess: () => navigate("/dashboard") }
+    );
   };
 
   return (

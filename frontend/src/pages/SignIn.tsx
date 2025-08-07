@@ -62,10 +62,13 @@ const SignIn = () => {
   const onSocial = async (provider: "google" | "github") => {
     setError(null);
 
-    await authClient.signIn.social({
-      provider,
-      callbackURL: `${import.meta.env.VITE_FRONTEND_URL}/dashboard`,
-    });
+    await authClient.signIn.social(
+      {
+        provider,
+        callbackURL: `${import.meta.env.VITE_FRONTEND_URL}/dashboard`,
+      },
+      { onSuccess: () => navigate("/dashboard") }
+    );
   };
 
   return (
@@ -171,7 +174,7 @@ const SignIn = () => {
 
                 <div className="text-center text-sm">
                   Dont&apos;t have an account?{" "}
-                  <Link to="/sign-in" className="underline underline-offset-4">
+                  <Link to="/sign-up" className="underline underline-offset-4">
                     Sign up
                   </Link>
                 </div>
