@@ -3,7 +3,7 @@ import { OctagonAlertIcon } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { authClient } from "../lib/auth-client";
 import { Card, CardContent } from "../components/ui/card";
 import {
@@ -26,6 +26,7 @@ const formSchema = z.object({
 });
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
   type FormData = z.infer<typeof formSchema>;
@@ -58,10 +59,13 @@ const SignIn = () => {
   const onSocial = async (provider: "google" | "github") => {
     setError(null);
 
-    await authClient.signIn.social({
-      provider,
-      callbackURL: `/dashboard`,
-    });
+    await authClient.signIn.social(
+      {
+        provider,
+        disableRedirect: true,
+      },
+      { onSuccess: () => navigate("/dashboard") }
+    );
   };
 
   return (
