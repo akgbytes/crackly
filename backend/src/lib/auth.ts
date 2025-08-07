@@ -17,16 +17,14 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  cookieOptions: {
-    sameSite: "None",
-    secure: true,
-  },
+
   advanced: {
     cookies: {
       session_token: {
         name: "crackly_session",
       },
     },
+    defaultCookieAttributes: { sameSite: "None", secure: true, httpOnly: true },
   },
   session: {
     cookieCache: { enabled: true, maxAge: 10 * 60 },
