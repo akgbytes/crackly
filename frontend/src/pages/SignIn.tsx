@@ -3,7 +3,7 @@ import { OctagonAlertIcon } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { authClient } from "../lib/auth-client";
 import { Card, CardContent } from "../components/ui/card";
 import {
@@ -26,8 +26,6 @@ const formSchema = z.object({
 });
 
 const SignIn = () => {
-  const navigate = useNavigate();
-
   const [error, setError] = useState<string | null>(null);
 
   type FormData = z.infer<typeof formSchema>;
@@ -47,11 +45,9 @@ const SignIn = () => {
       {
         email: data.email,
         password: data.password,
+        callbackURL: "/dashboard",
       },
       {
-        onSuccess: () => {
-          navigate(`${import.meta.env.VITE_FRONTEND_URL}/dashboard`);
-        },
         onError: ({ error }) => {
           setError(error.message);
         },
@@ -62,16 +58,10 @@ const SignIn = () => {
   const onSocial = async (provider: "google" | "github") => {
     setError(null);
 
-    await authClient.signIn.social(
-      {
-        provider,
-        callbackURL: `${import.meta.env.VITE_FRONTEND_URL}/dashboard`,
-      },
-      {
-        onSuccess: () =>
-          navigate(`${import.meta.env.VITE_FRONTEND_URL}/dashboard`),
-      }
-    );
+    await authClient.signIn.social({
+      provider,
+      callbackURL: `/dashboard`,
+    });
   };
 
   return (
