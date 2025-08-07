@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db";
 import { user, account, session, verification } from "../db/schema/users";
+import { env } from "../configs/env";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -36,5 +37,5 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
   },
-  trustedOrigins: ["http://localhost:5173"],
+  trustedOrigins: [env.CLIENT_URL],
 });
