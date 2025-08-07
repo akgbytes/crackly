@@ -62,7 +62,7 @@ const SignUp = () => {
       },
       {
         onSuccess: () => {
-          navigate("/dashboard");
+          navigate(`${import.meta.env.VITE_FRONTEND_URL}/dashboard`);
         },
         onError: ({ error }) => {
           setError(error.message);

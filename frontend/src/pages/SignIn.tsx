@@ -50,7 +50,7 @@ const SignIn = () => {
       },
       {
         onSuccess: () => {
-          navigate("/dashboard");
+          navigate(`${import.meta.env.VITE_FRONTEND_URL}/dashboard`);
         },
         onError: ({ error }) => {
           setError(error.message);
@@ -67,7 +67,10 @@ const SignIn = () => {
         provider,
         callbackURL: `${import.meta.env.VITE_FRONTEND_URL}/dashboard`,
       },
-      { onSuccess: () => navigate("/dashboard") }
+      {
+        onSuccess: () =>
+          navigate(`${import.meta.env.VITE_FRONTEND_URL}/dashboard`),
+      }
     );
   };
 
