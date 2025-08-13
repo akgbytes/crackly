@@ -35,6 +35,7 @@ const formSchema = z
   });
 
 const SignUp = () => {
+  console.log("url: ", `${import.meta.env.VITE_FRONTEND_URL}/dashboard`);
   const [error, setError] = useState<string | null>(null);
 
   type FormData = z.infer<typeof formSchema>;
@@ -50,7 +51,6 @@ const SignUp = () => {
   });
 
   const onSubmit = async (data: FormData) => {
-    console.log("ddddd: ", `${import.meta.env.FRONTEND_URL}/dashboard`);
     setError(null);
 
     await authClient.signUp.email(
