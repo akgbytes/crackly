@@ -26,7 +26,6 @@ const formSchema = z.object({
 });
 
 const SignIn = () => {
-  console.log("url: ", `${import.meta.env.VITE_FRONTEND_URL}/dashboard`);
   const [error, setError] = useState<string | null>(null);
 
   type FormData = z.infer<typeof formSchema>;
