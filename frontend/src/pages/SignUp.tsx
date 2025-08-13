@@ -3,7 +3,7 @@ import { OctagonAlertIcon } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { authClient } from "../lib/auth-client";
 import { Card, CardContent } from "../components/ui/card";
 import { FcGoogle } from "react-icons/fc";
@@ -35,7 +35,6 @@ const formSchema = z
   });
 
 const SignUp = () => {
-  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
   type FormData = z.infer<typeof formSchema>;
