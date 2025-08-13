@@ -58,7 +58,7 @@ const SignUp = () => {
         name: data.name,
         email: data.email,
         password: data.password,
-        callbackURL: "/dashboard",
+        callbackURL: `${import.meta.env.FRONTEND_URL}/dashboard`,
       },
       {
         onError: ({ error }) => {
@@ -71,13 +71,10 @@ const SignUp = () => {
   const onSocial = async (provider: "google" | "github") => {
     setError(null);
 
-    await authClient.signIn.social(
-      {
-        provider,
-        disableRedirect: true,
-      },
-      { onSuccess: () => navigate("/dashboard") }
-    );
+    await authClient.signIn.social({
+      provider,
+      callbackURL: `${import.meta.env.FRONTEND_URL}/dashboard`,
+    });
   };
 
   return (

@@ -25,6 +25,7 @@ export const auth = betterAuth({
       },
     },
     defaultCookieAttributes: { sameSite: "None", secure: true, httpOnly: true },
+    useSecureCookies: true,
   },
   session: {
     cookieCache: { enabled: true, maxAge: 10 * 60 },
@@ -39,5 +40,6 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
   },
+
   trustedOrigins: [env.CLIENT_URL],
 });
