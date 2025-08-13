@@ -45,7 +45,7 @@ const SignIn = () => {
       {
         email: data.email,
         password: data.password,
-        callbackURL: `${import.meta.env.FRONTEND_URL}/dashboard`,
+        callbackURL: `${import.meta.env.VITE_FRONTEND_URL}/dashboard`,
       },
       {
         onError: ({ error }) => {
@@ -60,7 +60,7 @@ const SignIn = () => {
 
     await authClient.signIn.social({
       provider,
-      callbackURL: `${import.meta.env.FRONTEND_URL}/dashboard`,
+      callbackURL: `${import.meta.env.VITE_FRONTEND_URL}/dashboard`,
     });
   };
 

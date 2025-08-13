@@ -50,6 +50,7 @@ const SignUp = () => {
   });
 
   const onSubmit = async (data: FormData) => {
+    console.log("ddddd: ", `${import.meta.env.FRONTEND_URL}/dashboard`);
     setError(null);
 
     await authClient.signUp.email(
@@ -57,7 +58,7 @@ const SignUp = () => {
         name: data.name,
         email: data.email,
         password: data.password,
-        callbackURL: `${import.meta.env.FRONTEND_URL}/dashboard`,
+        callbackURL: `${import.meta.env.VITE_FRONTEND_URL}/dashboard`,
       },
       {
         onError: ({ error }) => {
@@ -72,7 +73,7 @@ const SignUp = () => {
 
     await authClient.signIn.social({
       provider,
-      callbackURL: `${import.meta.env.FRONTEND_URL}/dashboard`,
+      callbackURL: `${import.meta.env.VITE_FRONTEND_URL}/dashboard`,
     });
   };
 
